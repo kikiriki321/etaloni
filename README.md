@@ -43,7 +43,7 @@ Alat za brzo i precizno izračunavanje kombinacija paralelnih mjernih pločica (
 
 Jednostavno otvori link: https://kikiriki321.github.io/etaloni/
 
-Ili download `index.html` i otvori u browseru (offline verzija).
+Ili preuzmi `index.html` i otvori u pregledniku (offline verzija).
 
 ---
 
