@@ -1,0 +1,1230 @@
+<!DOCTYPE html><html lang="hr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator paralelnih mjernih pločica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #475569;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        body.light-mode {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            gap: 12px;
+        }
+        
+        .title-section {
+            flex: 1;
+        }
+        
+        h1 {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .theme-toggle, .lang-selector {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            min-width: 90px;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        
+        .theme-toggle:hover, .lang-selector:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        .info-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-width: 90px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+            color: var(--text-primary);
+            gap: 8px;
+        }
+        
+        .info-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .theme-icon, .lang-icon {
+            font-size: 18px;
+        }
+        
+        .input-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s;
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .button {
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            background: var(--accent);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        }
+        
+        .button:active {
+            transform: translateY(0);
+        }
+        
+        .button.secondary {
+            background: var(--bg-card);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            margin-top: 16px;
+        }
+        
+        .button.secondary:hover {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .results {
+            margin-top: 32px;
+        }
+        
+        .result-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 16px;
+            animation: slideIn 0.4s ease;
+            transition: all 0.3s;
+        }
+        
+        .result-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+        
+        .block-count {
+            background: var(--accent);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .blocks-list {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+        
+        .blocks-visual {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        
+        .block-visual {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s;
+            min-width: 80px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .block-visual:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .block-visual.large {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .block-visual.medium {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .block-visual.small {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .block-visual.tiny {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .sum-display {
+            margin-top: 16px;
+            padding: 14px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--success);
+            font-size: 18px;
+            border: 1px solid var(--border);
+        }
+        
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--error);
+            color: var(--error);
+        }
+        
+        .info {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 32px;
+            color: var(--text-secondary);
+        }
+        
+        .spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hide {
+            display: none !important;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .close-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 20px;
+            color: var(--text-primary);
+        }
+        
+        .close-btn:hover {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+        }
+        
+        .info-section {
+            margin-bottom: 24px;
+        }
+        
+        .info-section h3 {
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+        
+        .info-item {
+            background: var(--bg-card);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .info-item strong {
+            color: var(--text-primary);
+        }
+        
+        .info-item span {
+            color: var(--text-secondary);
+        }
+        
+        .blocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 6px;
+            margin-top: 12px;
+        }
+        
+        .block-chip {
+            background: var(--bg-primary);
+            padding: 6px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        
+        .block-chip:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Obojeni chipovi - ista pravila kao i za block-visual */
+        .block-chip.large {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-color: #10b981;
+            font-weight: 600;
+        }
+        
+        .block-chip.medium {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border-color: #f59e0b;
+            font-weight: 600;
+        }
+        
+        .block-chip.small {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border-color: #8b5cf6;
+            font-weight: 600;
+        }
+        
+        .block-chip.tiny {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            color: white;
+            border-color: #ec4899;
+            font-weight: 600;
+        }
+        
+        .author-info {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 3px solid var(--success);
+        }
+        
+        .author-info p {
+            margin: 6px 0;
+            color: var(--text-secondary);
+        }
+        
+        .author-info a {
+            color: var(--accent);
+            text-decoration: none;
+            word-break: break-all;
+        }
+        
+        .author-info a:hover {
+            text-decoration: underline;
+        }
+        
+        .version {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+@media (max-width: 480px) {
+    .container {
+        padding: 20px 16px;
+        border-radius: 20px;
+    }
+    
+    h1 {
+        font-size: 20px;
+    }
+    
+    .subtitle {
+        font-size: 12px;
+    }
+    
+    .header {
+        gap: 12px;
+        /* flex-direction: column; ← OBRISANO! */
+    }
+    
+    .controls {
+        flex-shrink: 0;
+    }
+    
+    /* ↓ NOVO: Sakrij tekst na buttonima */
+    .theme-toggle span:not(.theme-icon),
+    .lang-selector span:not(.lang-icon) {
+        display: none;
+    }
+    
+    .theme-toggle, .lang-selector, .info-btn {
+        min-width: 40px;
+        padding: 8px;
+    }
+    
+    .theme-icon, .lang-icon {
+        font-size: 18px;
+    }
+    
+    input[type="text"], .button {
+        font-size: 16px;
+    }
+    
+    .blocks-visual {
+        gap: 6px;
+    }
+    
+    .block-visual {
+        font-size: 14px;
+        padding: 10px 12px;
+        min-width: 70px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-section">
+                <h1>
+                    <span>⚙️</span>
+                    <span id="mainTitle">Kalkulator mjernih pločica</span>
+                </h1>
+                <p class="subtitle" id="subtitle">Pronađite optimalnu kombinaciju etalona</p>
+            </div>
+            <div class="controls">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span class="theme-icon" id="themeIcon">☀️</span>
+                    <span id="themeText">Svijetla</span>
+                </button>
+                <button class="lang-selector" onclick="cycleLanguage()">
+                    <span class="lang-icon">🌐</span>
+                    <span id="langText">HR</span>
+                </button>
+                <button class="info-btn" onclick="openInfoModal()" title="Informacije">ℹ️</button>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label for="targetValue" id="inputLabel">Željena dimenzija (mm):</label>
+            <input type="text" id="targetValue" placeholder="npr. 47.385 ili 47,385" autocomplete="off" inputmode="decimal">
+        </div>
+        
+        <button class="button" onclick="calculate()">
+            <span>🔍</span>
+            <span id="calculateBtn">Izračunaj kombinacije</span>
+        </button>
+        
+        <div id="results" class="results hide"></div>
+    </div>
+    
+    <div id="infoModal" class="modal hide">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">ℹ️ Informacije o kalkulatoru</h2>
+                <button class="close-btn" onclick="closeInfoModal()">✕</button>
+            </div>
+            
+            <div class="info-section">
+                <h3 id="infoLimitsTitle">📊 Ograničenja po dimenzijama</h3>
+                <div class="info-item">
+                    <strong id="infoRange1">≤ 100 mm:</strong><br>
+                    <span id="infoRange1Desc">Traži do 100 kombinacija, prikazuje prvih 10 najboljih</span>
+                </div>
+                <div class="info-item">
+                    <strong id="infoRange2">100 - 200 mm:</strong><br>
+                    <span id="infoRange2Desc">Traži samo 5 najboljih kombinacija</span>
+                </div>
+                <div class="info-item">
+                    <strong id="infoRange3">&gt; 200 mm:</strong><br>
+                    <span id="infoRange3Desc">Traži samo 1 najpraktičniju kombinaciju</span>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3 id="infoDecimalsTitle">🔢 Preciznost decimala</h3>
+                <div class="info-item">
+                    <strong id="infoDec1">≤ 400 mm:</strong><br>
+                    <span id="infoDec1Desc">Omogućen unos do 3 decimale (npr. 125.375)</span>
+                </div>
+                <div class="info-item">
+                    <strong id="infoDec2">&gt; 400 mm:</strong><br>
+                    <span id="infoDec2Desc">Omogućen unos do 2 decimale (npr. 450.25)</span>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3 id="infoOtherTitle">💡 Dodatne informacije</h3>
+                <div class="info-item">
+                    <span id="infoMax">Maksimalna moguća dimenzija: <strong>715.295 mm</strong> (zbroj svih pločica u setu)</span>
+                </div>
+                <div class="info-item">
+                    <span id="infoInput">Možete koristiti decimalnu točku (.) ili zarez (,)</span>
+                </div>
+                <div class="info-item">
+                    <span id="infoBlocks">Svaka pločica se može koristiti samo jednom po kombinaciji</span>
+                </div>
+                <div class="info-item">
+                    <span id="infoMaxBlocks">Maksimalno pločica po kombinaciji: <strong>12</strong></span>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3 id="infoBlocksTitle">📦 Dostupne pločice u setu (87 komada)</h3>
+                <div class="blocks-grid" id="blocksGrid">
+                    <!-- Pločice će biti dinamički generirane s bojama -->
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3 id="infoAuthorTitle">👨‍💻 O programu</h3>
+                <div class="author-info">
+                    <p><strong id="authorLabel">Autor:</strong> Josip Sinković <span class="version" id="versionLabel">v1.2 (2025)</span></p>
+                    <p><strong>Email:</strong> <a href="mailto:motorola10@gmail.com">motorola10@gmail.com</a></p>
+                    <p><strong>Web:</strong> <a href="https://etaloni.tiiny.site/" target="_blank">etaloni.tiiny.site</a></p>
+                    <p style="margin-top: 12px; font-style: italic;" id="authorNote">Program napravljen za kolege koji ne znaju računati napamet! 😄</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            hr: {
+                mainTitle: 'Kalkulator mjernih pločica',
+                subtitle: 'Pronađite optimalnu kombinaciju etalona',
+                inputLabel: 'Željena dimenzija (mm):',
+                inputPlaceholder: 'npr. 47.385 ili 47,385',
+                calculateBtn: 'Izračunaj kombinacije',
+                themeLight: 'Svijetla',
+                themeDark: 'Tamna',
+                searching: 'Tražim optimalne kombinacije...',
+                error: 'Greška',
+                errorMessage: 'Molimo unesite ispravnu pozitivnu vrijednost.',
+                tooLarge: 'Dimenzija prevelika',
+                maxPossible: 'Maksimalna moguća dimenzija sa svim pločicama iz seta je',
+                tip: 'Savjet: Za veće dimenzije koristite dodatne setove pločica',
+                notPossible: 'Nije moguće sastaviti dimenziju',
+                checkValue: 'Provjerite je li unesena vrijednost u rasponu mogućih kombinacija.',
+                reason: 'Razlog',
+                checkedCombinations: 'Provjereno',
+                combinationsLower: 'kombinacija',
+                nearestDimension: 'Najbliža moguća dimenzija',
+                or: 'ili',
+                optimalFound: 'Optimalna kombinacija pronađena',
+                largeInfo: 'Za dimenzije > 200mm prikazujem samo najpraktičniju kombinaciju',
+                found: 'Pronađeno',
+                best: 'najboljih',
+                combinations: 'kombinacija',
+                mediumInfo: 'Za dimenzije 100-200mm prikazujem samo prvih 5 rješenja',
+                showing: 'Prikazujem prvih',
+                bestSolutions: 'najboljih rješenja',
+                showingAll: 'Prikazujem svih',
+                combination: 'Kombinacija',
+                block: 'pločica',
+                blocks2_4: 'pločice',
+                blocks5plus: 'pločica',
+                total: 'Ukupno',
+                showAll: 'Prikaži svih',
+                showFirst: 'Prikaži samo prvih',
+                modalTitle: 'Informacije o kalkulatoru',
+                infoLimitsTitle: 'Ograničenja po dimenzijama',
+                infoRange1: '≤ 100 mm:',
+                infoRange1Desc: 'Traži do 100 kombinacija, prikazuje prvih 10 najboljih',
+                infoRange2: '100 - 200 mm:',
+                infoRange2Desc: 'Traži samo 5 najboljih kombinacija',
+                infoRange3: '> 200 mm:',
+                infoRange3Desc: 'Traži samo 1 najpraktičniju kombinaciju',
+                infoDecimalsTitle: 'Preciznost decimala',
+                infoDec1: '≤ 400 mm:',
+                infoDec1Desc: 'Omogućen unos do 3 decimale (npr. 125.375)',
+                infoDec2: '> 400 mm:',
+                infoDec2Desc: 'Omogućen unos do 2 decimale (npr. 450.25)',
+                infoOtherTitle: 'Dodatne informacije',
+                infoMax: 'Maksimalna moguća dimenzija: <strong>715.295 mm</strong> (zbroj svih pločica u setu)',
+                infoInput: 'Možete koristiti decimalnu točku (.) ili zarez (,)',
+                infoBlocks: 'Svaka pločica se može koristiti samo jednom po kombinaciji',
+                infoMaxBlocks: 'Maksimalno pločica po kombinaciji: <strong>12</strong>',
+                infoBlocksTitle: 'Dostupne pločice u setu (87 komada)',
+                infoAuthorTitle: 'O programu',
+                authorLabel: 'Autor:',
+                versionLabel: 'v1.2 (2025)',
+                authorNote: 'Program napravljen za kolege koji ne znaju računati napamet! 😄'
+            },
+            en: {
+                mainTitle: 'Gauge Block Calculator',
+                subtitle: 'Find the optimum combination of gauge blocks',
+                inputLabel: 'Desired dimension (mm):',
+                inputPlaceholder: 'e.g. 47.385 or 47,385',
+                calculateBtn: 'Calculate combinations',
+                themeLight: 'Light',
+                themeDark: 'Dark',
+                searching: 'Searching for optimum combinations...',
+                error: 'Error',
+                errorMessage: 'Please enter a valid positive value.',
+                tooLarge: 'Dimension too large',
+                maxPossible: 'Maximum possible dimension with all blocks in the set is',
+                tip: 'Tip: Use additional gauge block sets for larger dimensions',
+                notPossible: 'Cannot build dimension',
+                checkValue: 'Please check if the entered value is within the possible range.',
+                reason: 'Reason',
+                checkedCombinations: 'Checked',
+                combinationsLower: 'combinations',
+                nearestDimension: 'Nearest possible dimension',
+                or: 'or',
+                optimalFound: 'Optimum combination found',
+                largeInfo: 'For dimensions > 200mm showing only the most practical combination',
+                found: 'Found',
+                best: 'best',
+                combinations: 'combinations',
+                mediumInfo: 'For dimensions 100-200mm showing only first 5 solutions',
+                showing: 'Showing first',
+                bestSolutions: 'best solutions',
+                showingAll: 'Showing all',
+                combination: 'Combination',
+                block: 'block',
+                blocks2_4: 'blocks',
+                blocks5plus: 'blocks',
+                total: 'Total',
+                showAll: 'Show all',
+                showFirst: 'Show only first',
+                modalTitle: 'Calculator Information',
+                infoLimitsTitle: 'Limits by dimensions',
+                infoRange1: '≤ 100 mm:',
+                infoRange1Desc: 'Searches up to 100 combinations, displays first 10 best',
+                infoRange2: '100 - 200 mm:',
+                infoRange2Desc: 'Searches only 5 best combinations',
+                infoRange3: '> 200 mm:',
+                infoRange3Desc: 'Searches only 1 most practical combination',
+                infoDecimalsTitle: 'Decimal precision',
+                infoDec1: '≤ 400 mm:',
+                infoDec1Desc: 'Input up to 3 decimal places allowed (e.g. 125.375)',
+                infoDec2: '> 400 mm:',
+                infoDec2Desc: 'Input up to 2 decimal places allowed (e.g. 450.25)',
+                infoOtherTitle: 'Additional information',
+                infoMax: 'Maximum possible dimension: <strong>715.295 mm</strong> (sum of all blocks in the set)',
+                infoInput: 'You can use decimal point (.) or comma (,)',
+                infoBlocks: 'Each block can only be used once per combination',
+                infoMaxBlocks: 'Maximum blocks per combination: <strong>12</strong>',
+                infoBlocksTitle: 'Available blocks in the set (87 pieces)',
+                infoAuthorTitle: 'About the program',
+                authorLabel: 'Author:',
+                versionLabel: 'v1.2 (2025)',
+                authorNote: 'Program created for colleagues who can\'t calculate in their heads! 😄'
+            },
+            de: {
+                mainTitle: 'Endmaß-Rechner',
+                subtitle: 'Finden Sie die optimale Kombination von Endmaßen',
+                inputLabel: 'Gewünschtes Maß (mm):',
+                inputPlaceholder: 'z.B. 47.385 oder 47,385',
+                calculateBtn: 'Kombinationen berechnen',
+                themeLight: 'Hell',
+                themeDark: 'Dunkel',
+                searching: 'Suche nach optimalen Kombinationen...',
+                error: 'Fehler',
+                errorMessage: 'Bitte geben Sie einen gültigen positiven Wert ein.',
+                tooLarge: 'Maß zu groß',
+                maxPossible: 'Maximal mögliches Maß mit allen Endmaßen im Satz ist',
+                tip: 'Tipp: Verwenden Sie zusätzliche Endmaß-Sätze für größere Maße',
+                notPossible: 'Maß kann nicht zusammengestellt werden',
+                checkValue: 'Bitte prüfen Sie, ob der eingegebene Wert im möglichen Bereich liegt.',
+                optimalFound: 'Optimale Kombination gefunden',
+                largeInfo: 'Für Maße > 200mm wird nur die praktischste Kombination angezeigt',
+                found: 'Gefunden',
+                best: 'beste',
+                combinations: 'Kombinationen',
+                mediumInfo: 'Für Maße 100-200mm werden nur die ersten 5 Lösungen angezeigt',
+                showing: 'Zeige erste',
+                bestSolutions: 'beste Lösungen',
+                showingAll: 'Zeige alle',
+                combination: 'Kombination',
+                block: 'Endmaß',
+                blocks2_4: 'Endmaße',
+                blocks5plus: 'Endmaße',
+                total: 'Gesamt',
+                showAll: 'Alle anzeigen',
+                showFirst: 'Nur erste anzeigen',
+                modalTitle: 'Rechner-Informationen',
+                infoLimitsTitle: 'Grenzen nach Dimensionen',
+                infoRange1: '≤ 100 mm:',
+                infoRange1Desc: 'Sucht bis zu 100 Kombinationen, zeigt erste 10 beste',
+                infoRange2: '100 - 200 mm:',
+                infoRange2Desc: 'Sucht nur 5 beste Kombinationen',
+                infoRange3: '> 200 mm:',
+                infoRange3Desc: 'Sucht nur 1 praktischste Kombination',
+                infoDecimalsTitle: 'Dezimalgenauigkeit',
+                infoDec1: '≤ 400 mm:',
+                infoDec1Desc: 'Eingabe bis zu 3 Dezimalstellen erlaubt (z.B. 125.375)',
+                infoDec2: '> 400 mm:',
+                infoDec2Desc: 'Eingabe bis zu 2 Dezimalstellen erlaubt (z.B. 450.25)',
+                infoOtherTitle: 'Zusätzliche Informationen',
+                infoMax: 'Maximal mögliches Maß: <strong>715.295 mm</strong> (Summe aller Endmaße im Satz)',
+                infoInput: 'Sie können Dezimalpunkt (.) oder Komma (,) verwenden',
+                infoBlocks: 'Jedes Endmaß kann nur einmal pro Kombination verwendet werden',
+                infoMaxBlocks: 'Maximale Endmaße pro Kombination: <strong>12</strong>',
+                infoBlocksTitle: 'Verfügbare Endmaße im Satz (87 Stück)',
+                infoAuthorTitle: 'Über das Programm',
+                authorLabel: 'Autor:',
+                versionLabel: 'v1.2 (2025)',
+                authorNote: 'Programm erstellt für Kollegen, die nicht im Kopf rechnen können! 😄'
+            }
+        };
+
+        const gaugeBlocks = [
+            100, 90, 80, 70, 60, 50, 40, 30, 20, 10,
+            9.5, 9.0, 8.5, 8.0, 7.5, 7.0, 6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5,
+            1.49, 1.48, 1.47, 1.46, 1.45, 1.44, 1.43, 1.42, 1.41, 1.40,
+            1.39, 1.38, 1.37, 1.36, 1.35, 1.34, 1.33, 1.32, 1.31, 1.30,
+            1.29, 1.28, 1.27, 1.26, 1.25, 1.24, 1.23, 1.22, 1.21, 1.20,
+            1.19, 1.18, 1.17, 1.16, 1.15, 1.14, 1.13, 1.12, 1.11, 1.10,
+            1.09, 1.08, 1.07, 1.06, 1.05, 1.04, 1.03, 1.02, 1.01,
+            1.009, 1.008, 1.007, 1.006, 1.005, 1.004, 1.003, 1.002, 1.001, 1, 0.5
+        ];
+
+        let allCombinations = [];
+        let showingAll = false;
+        let currentLang = 'hr';
+        const maxPossible = gaugeBlocks.reduce((sum, block) => sum + block, 0);
+
+        function getBlockClass(value) {
+            if (value >= 10) return 'large';
+            if (value >= 1.5) return 'medium';
+            if (value >= 1.01) return 'small';
+            return 'tiny';
+        }
+
+        function generateColoredBlocksGrid() {
+            const blocks = [
+                0.5, 1.0, 1.001, 1.002, 1.003, 1.004, 1.005, 1.006, 1.007, 1.008, 1.009,
+                1.01, 1.02, 1.03, 1.04, 1.05, 1.06, 1.07, 1.08, 1.09,
+                1.10, 1.11, 1.12, 1.13, 1.14, 1.15, 1.16, 1.17, 1.18, 1.19,
+                1.20, 1.21, 1.22, 1.23, 1.24, 1.25, 1.26, 1.27, 1.28, 1.29,
+                1.30, 1.31, 1.32, 1.33, 1.34, 1.35, 1.36, 1.37, 1.38, 1.39,
+                1.40, 1.41, 1.42, 1.43, 1.44, 1.45, 1.46, 1.47, 1.48, 1.49,
+                1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5,
+                10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+            ];
+            
+            return blocks.map(block => 
+                `<div class="block-chip ${getBlockClass(block)}">${block}</div>`
+            ).join('');
+        }
+
+        function cycleLanguage() {
+            const langs = ['hr', 'en', 'de'];
+            const currentIndex = langs.indexOf(currentLang);
+            currentLang = langs[(currentIndex + 1) % langs.length];
+            document.getElementById('langText').textContent = currentLang.toUpperCase();
+            updateLanguage();
+            updateModalLanguage();
+        }
+
+        function updateLanguage() {
+            const t = translations[currentLang];
+            document.getElementById('mainTitle').textContent = t.mainTitle;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('inputLabel').textContent = t.inputLabel;
+            document.getElementById('targetValue').placeholder = t.inputPlaceholder;
+            document.getElementById('calculateBtn').textContent = t.calculateBtn;
+            document.title = t.mainTitle;
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeText').textContent = isLight ? t.themeDark : t.themeLight;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            const t = translations[currentLang];
+            document.getElementById('themeIcon').textContent = isLight ? '🌙' : '☀️';
+            document.getElementById('themeText').textContent = isLight ? t.themeDark : t.themeLight;
+        }
+
+        function openInfoModal() {
+            document.getElementById('infoModal').classList.remove('hide');
+            
+            // Generiši obojene pločice
+            const blocksGrid = document.getElementById('blocksGrid');
+            if (blocksGrid) {
+                blocksGrid.innerHTML = generateColoredBlocksGrid();
+            }
+            
+            setTimeout(() => {
+                updateModalLanguage();
+            }, 10);
+        }
+        
+        function updateModalLanguage() {
+            const t = translations[currentLang];
+            const elements = {
+                'modalTitle': 'ℹ️ ' + t.modalTitle,
+                'infoLimitsTitle': '📊 ' + t.infoLimitsTitle,
+                'infoRange1': t.infoRange1,
+                'infoRange1Desc': t.infoRange1Desc,
+                'infoRange2': t.infoRange2,
+                'infoRange2Desc': t.infoRange2Desc,
+                'infoRange3': t.infoRange3,
+                'infoRange3Desc': t.infoRange3Desc,
+                'infoDecimalsTitle': '🔢 ' + t.infoDecimalsTitle,
+                'infoDec1': t.infoDec1,
+                'infoDec1Desc': t.infoDec1Desc,
+                'infoDec2': t.infoDec2,
+                'infoDec2Desc': t.infoDec2Desc,
+                'infoOtherTitle': '💡 ' + t.infoOtherTitle,
+                'infoInput': t.infoInput,
+                'infoBlocks': t.infoBlocks,
+                'infoMaxBlocks': t.infoMaxBlocks,
+                'infoBlocksTitle': '📦 ' + t.infoBlocksTitle,
+                'infoAuthorTitle': '👨‍💻 ' + t.infoAuthorTitle,
+                'authorLabel': t.authorLabel,
+                'versionLabel': t.versionLabel,
+                'authorNote': t.authorNote
+            };
+            
+            for (const [id, text] of Object.entries(elements)) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerHTML = text; // Koristimo innerHTML umjesto textContent
+                }
+            }
+            
+            const infoMaxEl = document.getElementById('infoMax');
+            if (infoMaxEl) {
+                infoMaxEl.innerHTML = t.infoMax;
+            }
+        }
+        
+        function closeInfoModal() {
+            document.getElementById('infoModal').classList.add('hide');
+        }
+
+        function round3(num) {
+            return Math.round(num * 1000) / 1000;
+        }
+
+        function getBlockWord(count) {
+            const t = translations[currentLang];
+            if (count === 1) return t.block;
+            if (currentLang === 'hr' && count >= 2 && count <= 4) return t.blocks2_4;
+            return t.blocks5plus;
+        }
+
+        function findCombinationsOptimized(target, maxResults) {
+            const results = new Map();
+            const targetRounded = round3(target);
+            const tolerance = 0.0005;
+            let iterationCount = 0;
+            const maxIterations = 100000; // Sigurnosni limit
+            
+            function findWithDFS(remaining, combo, startIdx, depth) {
+                iterationCount++;
+                
+                // Sigurnosni ventil - prekinuti ako je previše iteracija
+                if (iterationCount > maxIterations) return;
+                
+                // POVEĆAN LIMIT: sa 8 na 12 pločica
+                if (depth > 12) return;
+                
+                if (results.size >= maxResults) return;
+                const remainingRounded = round3(remaining);
+                if (Math.abs(remainingRounded) < tolerance) {
+                    const key = combo.slice().sort((a,b) => b - a).join(',');
+                    if (!results.has(key)) {
+                        results.set(key, [...combo]);
+                    }
+                    return;
+                }
+                if (remainingRounded < -tolerance) return;
+                for (let i = startIdx; i < gaugeBlocks.length; i++) {
+                    if (results.size >= maxResults) return;
+                    if (iterationCount > maxIterations) return;
+                    const block = gaugeBlocks[i];
+                    if (block > remainingRounded + tolerance) continue;
+                    combo.push(block);
+                    findWithDFS(remainingRounded - block, combo, i + 1, depth + 1);
+                    combo.pop();
+                }
+            }
+            findWithDFS(targetRounded, [], 0, 0);
+            const sortedResults = Array.from(results.values());
+            sortedResults.sort((a, b) => {
+                if (a.length !== b.length) return a.length - b.length;
+                for (let i = 0; i < Math.min(a.length, b.length); i++) {
+                    if (b[i] !== a[i]) return b[i] - a[i];
+                }
+                return 0;
+            });
+            return { results: sortedResults, iterations: iterationCount };
+        }
+        
+        function findNearestPossible(target) {
+            const step = 0.001;
+            const maxSearchRange = 5; // Traži do ±5mm
+            
+            // Traži najbližu manju dimenziju
+            for (let i = step; i <= maxSearchRange; i += step) {
+                const lower = round3(target - i);
+                if (lower < 0.5) break;
+                const result = findCombinationsOptimized(lower, 1);
+                if (result.results.length > 0) {
+                    return { lower: lower, upper: null };
+                }
+            }
+            
+            // Traži najbližu veću dimenziju
+            for (let i = step; i <= maxSearchRange; i += step) {
+                const upper = round3(target + i);
+                if (upper > maxPossible) break;
+                const result = findCombinationsOptimized(upper, 1);
+                if (result.results.length > 0) {
+                    return { lower: null, upper: upper };
+                }
+            }
+            
+            return { lower: null, upper: null };
+        }
+
+        function calculate() {
+            const t = translations[currentLang];
+            const input = document.getElementById('targetValue');
+            const resultsDiv = document.getElementById('results');
+            let inputValue = input.value.replace(',', '.');
+            const target = parseFloat(inputValue);
+            if (isNaN(target) || target <= 0) {
+                resultsDiv.innerHTML = `<div class="result-card error"><strong>⚠️ ${t.error}</strong><br>${t.errorMessage}</div>`;
+                resultsDiv.classList.remove('hide');
+                return;
+            }
+            if (target > maxPossible) {
+                resultsDiv.innerHTML = `<div class="result-card error"><strong>❌ ${t.tooLarge}: ${target.toFixed(3)} mm</strong><p style="margin-top: 12px; font-size: 14px;">${t.maxPossible} <strong>${maxPossible.toFixed(3)} mm</strong></p><p style="margin-top: 8px; font-size: 13px; opacity: 0.8;">💡 ${t.tip}</p></div>`;
+                resultsDiv.classList.remove('hide');
+                return;
+            }
+            resultsDiv.innerHTML = `<div class="loading"><div class="spinner"></div>⚙️ ${t.searching}</div>`;
+            resultsDiv.classList.remove('hide');
+            showingAll = false;
+            setTimeout(() => {
+                let maxResults;
+                if (target > 200) {
+                    maxResults = 1;
+                } else if (target > 100) {
+                    maxResults = 5;
+                } else {
+                    maxResults = 100;
+                }
+                const result = findCombinationsOptimized(target, maxResults);
+                allCombinations = result.results;
+                
+                // Ako nije pronađeno rješenje, potraži najbliže moguće
+                if (allCombinations.length === 0) {
+                    const nearest = findNearestPossible(target);
+                    let nearestText = '';
+                    
+                    if (nearest.lower && nearest.upper) {
+                        nearestText = `<strong>${t.nearestDimension || 'Najbliže moguće dimenzije'}:</strong> ${nearest.lower.toFixed(3)} mm ${t.or || 'ili'} ${nearest.upper.toFixed(3)} mm`;
+                    } else if (nearest.lower) {
+                        nearestText = `<strong>${t.nearestDimension || 'Najbliža moguća dimenzija'}:</strong> ${nearest.lower.toFixed(3)} mm`;
+                    } else if (nearest.upper) {
+                        nearestText = `<strong>${t.nearestDimension || 'Najbliža moguća dimenzija'}:</strong> ${nearest.upper.toFixed(3)} mm`;
+                    }
+                    
+                    resultsDiv.innerHTML = `<div class="result-card error">
+                        <strong>❌ ${t.notPossible} ${target.toFixed(3)} mm</strong>
+                        <p style="margin-top: 16px; font-size: 14px;">💡 <strong>${t.reason || 'Razlog'}:</strong></p>
+                        <ul style="margin: 8px 0 0 20px; font-size: 13px; line-height: 1.8;">
+                            <li>${t.checkedCombinations || 'Provjereno'} ${result.iterations.toLocaleString()}+ ${t.combinationsLower || 'kombinacija'}</li>
+                            ${nearestText ? `<li>${nearestText}</li>` : ''}
+                        </ul>
+                    </div>`;
+                    return;
+                }
+                
+                displayResults(false);
+            }, 50);
+        }
+
+        function displayResults(showAll) {
+            const t = translations[currentLang];
+            const resultsDiv = document.getElementById('results');
+            const target = parseFloat(document.getElementById('targetValue').value.replace(',', '.'));
+            let initialShowCount;
+            let isVeryLarge = false;
+            let isLargeTarget = false;
+            if (target > 200) {
+                initialShowCount = 1;
+                isVeryLarge = true;
+            } else if (target > 100) {
+                initialShowCount = 5;
+                isLargeTarget = true;
+            } else {
+                initialShowCount = 10;
+            }
+            if (allCombinations.length === 0) {
+                resultsDiv.innerHTML = `<div class="result-card error"><strong>❌ ${t.notPossible} ${target.toFixed(3)} mm</strong><p style="margin-top: 8px; font-size: 14px;">${t.checkValue}</p></div>`;
+                return;
+            }
+            const toShow = showAll ? allCombinations : allCombinations.slice(0, initialShowCount);
+            let html = '';
+            if (isVeryLarge && !showAll) {
+                html += `<div class="result-card info"><strong>✨ ${t.optimalFound}</strong><br><span style="font-size: 14px;">${t.largeInfo}</span></div>`;
+            } else if (isLargeTarget && !showAll) {
+                html += `<div class="result-card info"><strong>✨ ${t.found} ${allCombinations.length} ${allCombinations.length >= 5 ? t.best : ''} ${t.combinations}</strong><br><span style="font-size: 14px;">${t.mediumInfo}</span></div>`;
+            } else if (!isLargeTarget && !isVeryLarge && !showAll && allCombinations.length > initialShowCount) {
+                html += `<div class="result-card info"><strong>✨ ${t.found} ${allCombinations.length} ${t.combinations}</strong><br><span style="font-size: 14px;">${t.showing} ${initialShowCount} ${t.bestSolutions}</span></div>`;
+            } else if (showAll) {
+                html += `<div class="result-card info"><strong>📋 ${t.showingAll} ${allCombinations.length} ${t.combinations}</strong></div>`;
+            }
+            toShow.forEach((combo, index) => {
+                const sum = round3(combo.reduce((a, b) => a + b, 0));
+                html += `<div class="result-card"><div class="result-header"><span class="result-title">🔧 ${t.combination} ${index + 1}</span><span class="block-count">${combo.length} ${getBlockWord(combo.length)}</span></div><div class="blocks-list">${combo.map(b => b.toFixed(3)).join(' mm + ')} mm</div><div class="blocks-visual">${combo.map(b => `<div class="block-visual ${getBlockClass(b)}" title="${b.toFixed(3)} mm">${b.toFixed(3)}</div>`).join('')}</div><div class="sum-display">✓ ${t.total}: ${sum.toFixed(3)} mm</div></div>`;
+            });
+            if (!isLargeTarget && !isVeryLarge && !showAll && allCombinations.length > initialShowCount) {
+                html += `<button class="button secondary" onclick="showAllResults()">📂 ${t.showAll} ${allCombinations.length} ${t.combinations}</button>`;
+            } else if (!isLargeTarget && !isVeryLarge && showAll && allCombinations.length > initialShowCount) {
+                html += `<button class="button secondary" onclick="displayResults(false)">⬆️ ${t.showFirst} ${initialShowCount}</button>`;
+            }
+            resultsDiv.innerHTML = html;
+        }
+
+        function showAllResults() {
+            showingAll = true;
+            displayResults(true);
+        }
+
+        document.getElementById('targetValue').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+        
+        document.getElementById('targetValue').addEventListener('input', function(e) {
+            let value = e.target.value;
+            value = value.replace(',', '.');
+            value = value.replace(/[^\d.]/g, '');
+            const parts = value.split('.');
+            if (parts.length > 2) {
+                value = parts[0] + '.' + parts.slice(1).join('');
+            }
+            if (parts.length === 2) {
+                const integerPart = parseFloat(parts[0]) || 0;
+                const maxDecimals = integerPart > 400 ? 2 : 3;
+                if (parts[1].length > maxDecimals) {
+                    value = parts[0] + '.' + parts[1].substring(0, maxDecimals);
+                }
+            }
+            e.target.value = value;
+        });
+    </script>
+
+</body></html>
