@@ -677,7 +677,7 @@
                     <span id="infoBlocks">Svaka pločica se može koristiti samo jednom po kombinaciji</span>
                 </div>
                 <div class="info-item">
-                    <span id="infoMaxBlocks">Maksimalno pločica po kombinaciji: <strong>12</strong></span>
+                    <span id="infoMaxBlocks">Maksimalno pločica po kombinaciji: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong></span>
                 </div>
             </div>
             
@@ -756,7 +756,7 @@
                 infoMax: 'Maksimalna moguća dimenzija: <strong>715.295 mm</strong> (zbroj svih pločica u setu)',
                 infoInput: 'Možete koristiti decimalnu točku (.) ili zarez (,)',
                 infoBlocks: 'Svaka pločica se može koristiti samo jednom po kombinaciji',
-                infoMaxBlocks: 'Maksimalno pločica po kombinaciji: <strong>12</strong>',
+                infoMaxBlocks: 'Maksimalno pločica po kombinaciji: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
                 infoBlocksTitle: 'Dostupne pločice u setu (87 komada)',
                 infoAuthorTitle: 'O programu',
                 authorLabel: 'Autor:',
@@ -817,7 +817,7 @@
                 infoMax: 'Maximum possible dimension: <strong>715.295 mm</strong> (sum of all blocks in the set)',
                 infoInput: 'You can use decimal point (.) or comma (,)',
                 infoBlocks: 'Each block can only be used once per combination',
-                infoMaxBlocks: 'Maximum blocks per combination: <strong>12</strong>',
+                infoMaxBlocks: 'Maximum blocks per combination: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
                 infoBlocksTitle: 'Available blocks in the set (87 pieces)',
                 infoAuthorTitle: 'About the program',
                 authorLabel: 'Author:',
@@ -873,7 +873,7 @@
                 infoMax: 'Maximal mögliches Maß: <strong>715.295 mm</strong> (Summe aller Endmaße im Satz)',
                 infoInput: 'Sie können Dezimalpunkt (.) oder Komma (,) verwenden',
                 infoBlocks: 'Jedes Endmaß kann nur einmal pro Kombination verwendet werden',
-                infoMaxBlocks: 'Maximale Endmaße pro Kombination: <strong>12</strong>',
+                infoMaxBlocks: 'Maximale Endmaße pro Kombination: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
                 infoBlocksTitle: 'Verfügbare Endmaße im Satz (87 Stück)',
                 infoAuthorTitle: 'Über das Programm',
                 authorLabel: 'Autor:',
@@ -1020,12 +1020,12 @@
             return t.blocks5plus;
         }
 
-        function findCombinationsOptimized(target, maxResults) {
+     function findCombinationsOptimized(target, maxResults, maxIterations, maxDepth) {
             const results = new Map();
             const targetRounded = round3(target);
             const tolerance = 0.0005;
             let iterationCount = 0;
-            const maxIterations = 100000; // Sigurnosni limit
+            
             
             function findWithDFS(remaining, combo, startIdx, depth) {
                 iterationCount++;
@@ -1034,8 +1034,8 @@
                 if (iterationCount > maxIterations) return;
                 
                 // POVEĆAN LIMIT: sa 8 na 12 pločica
-                if (depth > 12) return;
-                
+                // DINAMIČKI LIMIT: ovisno o veličini dimenzije
+                if (depth > maxDepth) return;
                 if (results.size >= maxResults) return;
                 const remainingRounded = round3(remaining);
                 if (Math.abs(remainingRounded) < tolerance) {
@@ -1123,7 +1123,21 @@
                 } else {
                     maxResults = 100;
                 }
-                const result = findCombinationsOptimized(target, maxResults);
+                let maxIterations, maxDepth;
+if (target > 400) {
+    maxIterations = 250000;
+    maxDepth = 20;
+} else if (target > 200) {
+    maxIterations = 200000;
+    maxDepth = 16;
+} else if (target > 100) {
+    maxIterations = 150000;
+    maxDepth = 14;
+} else {
+    maxIterations = 100000;
+    maxDepth = 12;
+}
+const result = findCombinationsOptimized(target, maxResults, maxIterations, maxDepth);
                 allCombinations = result.results;
                 
                 // Ako nije pronađeno rješenje, potraži najbliže moguće
