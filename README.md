@@ -1,4 +1,4 @@
-# 📋 Changelog / Changelog / Änderungsprotokoll
+# 📋 Izmjene / Changelog / Änderungsprotokoll
 
 📖 **Čitaj na:** [🇭🇷 Hrvatski](#-hrvatskom) | [🇬🇧 English](#-english) | [🇩🇪 Deutsch](#-deutsch)
 
