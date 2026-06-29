@@ -1,14 +1,17 @@
-<!DOCTYPE html><html lang="hr"><head>
+<!DOCTYPE html>
+<html lang="hr">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kalkulator paralelnih mjernih pločica (etalona) - pronađite optimalnu kombinaciju za željenu dimenziju. Gauge Block Calculator. Endmaß-Rechner.">
+    <meta property="og:title" content="Kalkulator mjernih pločica / Gauge Block Calculator">
+    <meta property="og:description" content="Pronađite optimalnu kombinaciju paralelnih mjernih pločica za željenu dimenziju. 87-komadni ISO set.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#6366f1">
     <title>Kalkulator paralelnih mjernih pločica</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
             --bg-primary: #0f172a;
             --bg-secondary: #1e293b;
@@ -22,7 +25,7 @@
             --error: #ef4444;
             --warning: #f59e0b;
         }
-        
+
         body.light-mode {
             --bg-primary: #f8fafc;
             --bg-secondary: #ffffff;
@@ -31,16 +34,16 @@
             --text-secondary: #64748b;
             --border: #e2e8f0;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-primary);
             min-height: 100vh;
             padding: 20px;
             color: var(--text-primary);
-            transition: all 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
         }
-        
+
         .container {
             max-width: 700px;
             margin: 0 auto;
@@ -50,7 +53,7 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             border: 1px solid var(--border);
         }
-        
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -58,11 +61,9 @@
             margin-bottom: 24px;
             gap: 12px;
         }
-        
-        .title-section {
-            flex: 1;
-        }
-        
+
+        .title-section { flex: 1; }
+
         h1 {
             color: var(--text-primary);
             margin-bottom: 8px;
@@ -71,18 +72,12 @@
             align-items: center;
             gap: 12px;
         }
-        
-        .subtitle {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .theme-toggle, .lang-selector {
+
+        .subtitle { color: var(--text-secondary); font-size: 14px; }
+
+        .controls { display: flex; gap: 8px; }
+
+        .theme-toggle, .lang-selector, .info-btn {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -97,45 +92,21 @@
             font-size: 14px;
             color: var(--text-primary);
         }
-        
-        .theme-toggle:hover, .lang-selector:hover {
+
+        .info-btn { font-size: 18px; }
+
+        .theme-toggle:hover, .lang-selector:hover, .info-btn:hover {
             background: var(--accent);
             border-color: var(--accent);
             transform: translateY(-2px);
             color: white;
         }
-        
-        .info-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            min-width: 90px;
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 18px;
-            color: var(--text-primary);
-            gap: 8px;
-        }
-        
-        .info-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        .theme-icon, .lang-icon {
-            font-size: 18px;
-        }
-        
-        .input-group {
-            margin-bottom: 24px;
-        }
-        
+
+        .theme-icon, .lang-icon { font-size: 18px; }
+
+        /* INPUT */
+        .input-group { margin-bottom: 16px; }
+
         label {
             display: block;
             margin-bottom: 10px;
@@ -143,10 +114,12 @@
             font-weight: 600;
             font-size: 15px;
         }
-        
+
+        .input-wrapper { position: relative; }
+
         input[type="text"] {
             width: 100%;
-            padding: 16px 20px;
+            padding: 16px 48px 16px 20px;
             font-size: 20px;
             border: 2px solid var(--border);
             border-radius: 12px;
@@ -154,13 +127,84 @@
             background: var(--bg-card);
             color: var(--text-primary);
         }
-        
+
         input[type="text"]:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
-        
+
+        input[type="text"].invalid {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        }
+
+        .clear-btn {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 18px;
+            padding: 4px;
+            border-radius: 50%;
+            display: none;
+            transition: color 0.2s;
+        }
+
+        .clear-btn:hover { color: var(--error); }
+        .clear-btn.visible { display: block; }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            min-height: 18px;
+            transition: color 0.2s;
+        }
+
+        .input-hint.warning { color: var(--warning); }
+        .input-hint.error-hint { color: var(--error); }
+
+        /* HISTORY */
+        .history-section {
+            margin-bottom: 16px;
+        }
+
+        .history-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .history-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .history-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            font-family: monospace;
+        }
+
+        .history-chip:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* BUTTON */
         .button {
             width: 100%;
             padding: 16px;
@@ -177,33 +221,36 @@
             justify-content: center;
             gap: 8px;
         }
-        
+
         .button:hover {
             background: var(--accent-hover);
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
         }
-        
-        .button:active {
-            transform: translateY(0);
+
+        .button:active { transform: translateY(0); }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
-        
+
         .button.secondary {
             background: var(--bg-card);
             color: var(--accent);
             border: 2px solid var(--accent);
             margin-top: 16px;
         }
-        
+
         .button.secondary:hover {
             background: var(--accent);
             color: white;
         }
-        
-        .results {
-            margin-top: 32px;
-        }
-        
+
+        /* RESULTS */
+        .results { margin-top: 32px; }
+
         .result-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -213,36 +260,30 @@
             animation: slideIn 0.4s ease;
             transition: all 0.3s;
         }
-        
+
         .result-card:hover {
             transform: translateX(4px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
-        
+
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .result-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
-        
-        .result-title {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 16px;
-        }
-        
+
+        .result-title { font-weight: 600; color: var(--text-primary); font-size: 16px; }
+
+        .result-actions { display: flex; gap: 6px; align-items: center; }
+
         .block-count {
             background: var(--accent);
             color: white;
@@ -251,21 +292,48 @@
             font-size: 13px;
             font-weight: 600;
         }
-        
+
+        .copy-btn {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .copy-btn:hover {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
         .blocks-list {
             color: var(--text-secondary);
             font-size: 15px;
             line-height: 1.8;
             margin-bottom: 16px;
+            font-family: monospace;
         }
-        
+
         .blocks-visual {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             margin-top: 16px;
         }
-        
+
         .block-visual {
             background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: white;
@@ -282,33 +350,20 @@
             text-align: center;
             border: 2px solid rgba(255,255,255,0.2);
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: default;
+            user-select: none;
         }
-        
+
         .block-visual:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            transform: scale(1.08) translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
         }
-        
-        .block-visual.large {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-color: rgba(255,255,255,0.3);
-        }
-        
-        .block-visual.medium {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            border-color: rgba(255,255,255,0.3);
-        }
-        
-        .block-visual.small {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            border-color: rgba(255,255,255,0.3);
-        }
-        
-        .block-visual.tiny {
-            background: linear-gradient(135deg, #ec4899, #db2777);
-            border-color: rgba(255,255,255,0.3);
-        }
-        
+
+        .block-visual.large  { background: linear-gradient(135deg, #10b981, #059669); }
+        .block-visual.medium { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .block-visual.small  { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .block-visual.tiny   { background: linear-gradient(135deg, #ec4899, #db2777); }
+
         .sum-display {
             margin-top: 16px;
             padding: 14px;
@@ -320,58 +375,60 @@
             font-size: 18px;
             border: 1px solid var(--border);
         }
-        
-        .error {
-            background: rgba(239, 68, 68, 0.1);
-            border-color: var(--error);
-            color: var(--error);
-        }
-        
-        .info {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 32px;
-            color: var(--text-secondary);
-        }
-        
+
+        .error  { background: rgba(239,68,68,0.1);  border-color: var(--error);   color: var(--error);   }
+        .info   { background: rgba(99,102,241,0.1); border-color: var(--accent);  color: var(--accent);  }
+
+        .loading { text-align: center; padding: 32px; color: var(--text-secondary); }
+
         .spinner {
             border: 3px solid var(--border);
             border-top: 3px solid var(--accent);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             animation: spin 1s linear infinite;
             margin: 0 auto 16px;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .hide { display: none !important; }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 14px;
+            color: var(--text-primary);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            z-index: 2000;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        
-        .hide {
-            display: none !important;
-        }
-        
+
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* MODAL */
         .modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             padding: 20px;
         }
-        
+
         .modal-content {
             background: var(--bg-secondary);
             border-radius: 20px;
@@ -384,37 +441,26 @@
             position: relative;
             animation: modalSlideIn 0.3s ease;
         }
-        
+
         @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-40px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
         }
-        
-        .modal-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-        
+
+        .modal-title { font-size: 24px; font-weight: 600; color: var(--text-primary); }
+
         .close-btn {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 32px; height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -423,23 +469,12 @@
             font-size: 20px;
             color: var(--text-primary);
         }
-        
-        .close-btn:hover {
-            background: var(--error);
-            border-color: var(--error);
-            color: white;
-        }
-        
-        .info-section {
-            margin-bottom: 24px;
-        }
-        
-        .info-section h3 {
-            color: var(--accent);
-            margin-bottom: 12px;
-            font-size: 18px;
-        }
-        
+
+        .close-btn:hover { background: var(--error); border-color: var(--error); color: white; }
+
+        .info-section { margin-bottom: 24px; }
+        .info-section h3 { color: var(--accent); margin-bottom: 12px; font-size: 18px; }
+
         .info-item {
             background: var(--bg-card);
             padding: 12px 16px;
@@ -447,22 +482,17 @@
             margin-bottom: 8px;
             border-left: 3px solid var(--accent);
         }
-        
-        .info-item strong {
-            color: var(--text-primary);
-        }
-        
-        .info-item span {
-            color: var(--text-secondary);
-        }
-        
+
+        .info-item strong { color: var(--text-primary); }
+        .info-item span   { color: var(--text-secondary); }
+
         .blocks-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
             gap: 6px;
             margin-top: 12px;
         }
-        
+
         .block-chip {
             background: var(--bg-primary);
             padding: 6px;
@@ -471,64 +501,26 @@
             font-size: 12px;
             color: var(--text-primary);
             border: 1px solid var(--border);
-            transition: all 0.2s;
+            transition: transform 0.15s;
         }
-        
-        .block-chip:hover {
-            transform: scale(1.05);
-        }
-        
-        /* Obojeni chipovi - ista pravila kao i za block-visual */
-        .block-chip.large {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border-color: #10b981;
-            font-weight: 600;
-        }
-        
-        .block-chip.medium {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            border-color: #f59e0b;
-            font-weight: 600;
-        }
-        
-        .block-chip.small {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            color: white;
-            border-color: #8b5cf6;
-            font-weight: 600;
-        }
-        
-        .block-chip.tiny {
-            background: linear-gradient(135deg, #ec4899, #db2777);
-            color: white;
-            border-color: #ec4899;
-            font-weight: 600;
-        }
-        
+
+        .block-chip:hover { transform: scale(1.08); }
+        .block-chip.large  { background: linear-gradient(135deg, #10b981, #059669); color: white; border-color: #10b981; font-weight: 600; }
+        .block-chip.medium { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border-color: #f59e0b; font-weight: 600; }
+        .block-chip.small  { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border-color: #8b5cf6; font-weight: 600; }
+        .block-chip.tiny   { background: linear-gradient(135deg, #ec4899, #db2777); color: white; border-color: #ec4899; font-weight: 600; }
+
         .author-info {
             background: var(--bg-card);
             padding: 16px;
             border-radius: 12px;
             border-left: 3px solid var(--success);
         }
-        
-        .author-info p {
-            margin: 6px 0;
-            color: var(--text-secondary);
-        }
-        
-        .author-info a {
-            color: var(--accent);
-            text-decoration: none;
-            word-break: break-all;
-        }
-        
-        .author-info a:hover {
-            text-decoration: underline;
-        }
-        
+
+        .author-info p { margin: 6px 0; color: var(--text-secondary); }
+        .author-info a { color: var(--accent); text-decoration: none; word-break: break-all; }
+        .author-info a:hover { text-decoration: underline; }
+
         .version {
             display: inline-block;
             background: var(--success);
@@ -539,59 +531,51 @@
             font-weight: 600;
             margin-left: 8px;
         }
-        
-@media (max-width: 480px) {
-    .container {
-        padding: 20px 16px;
-        border-radius: 20px;
-    }
-    
-    h1 {
-        font-size: 20px;
-    }
-    
-    .subtitle {
-        font-size: 12px;
-    }
-    
-    .header {
-        gap: 12px;
-        /* flex-direction: column; ← OBRISANO! */
-    }
-    
-    .controls {
-        flex-shrink: 0;
-    }
-    
-    /* ↓ NOVO: Sakrij tekst na buttonima */
-    .theme-toggle span:not(.theme-icon),
-    .lang-selector span:not(.lang-icon) {
-        display: none;
-    }
-    
-    .theme-toggle, .lang-selector, .info-btn {
-        min-width: 40px;
-        padding: 8px;
-    }
-    
-    .theme-icon, .lang-icon {
-        font-size: 18px;
-    }
-    
-    input[type="text"], .button {
-        font-size: 16px;
-    }
-    
-    .blocks-visual {
-        gap: 6px;
-    }
-    
-    .block-visual {
-        font-size: 14px;
-        padding: 10px 12px;
-        min-width: 70px;
-    }
-}
+
+        /* LEGEND */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 12px; height: 12px;
+            border-radius: 3px;
+        }
+
+        .legend-dot.large  { background: #10b981; }
+        .legend-dot.medium { background: #f59e0b; }
+        .legend-dot.small  { background: #8b5cf6; }
+        .legend-dot.tiny   { background: #ec4899; }
+
+        /* MOBILE */
+        @media (max-width: 480px) {
+            .container { padding: 20px 16px; border-radius: 20px; }
+            h1 { font-size: 20px; }
+            .subtitle { font-size: 12px; }
+
+            .theme-toggle span:not(.theme-icon),
+            .lang-selector span:not(.lang-icon) { display: none; }
+
+            .theme-toggle, .lang-selector, .info-btn { min-width: 40px; padding: 8px; }
+            .theme-icon, .lang-icon { font-size: 18px; }
+
+            input[type="text"], .button { font-size: 16px; }
+            .blocks-visual { gap: 6px; }
+            .block-visual { font-size: 14px; padding: 10px 12px; min-width: 70px; }
+
+            .result-header { flex-direction: column; align-items: flex-start; }
+        }
     </style>
 </head>
 <body>
@@ -605,38 +589,52 @@
                 <p class="subtitle" id="subtitle">Pronađite optimalnu kombinaciju etalona</p>
             </div>
             <div class="controls">
-                <button class="theme-toggle" onclick="toggleTheme()">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Promjena teme">
                     <span class="theme-icon" id="themeIcon">☀️</span>
                     <span id="themeText">Svijetla</span>
                 </button>
-                <button class="lang-selector" onclick="cycleLanguage()">
+                <button class="lang-selector" onclick="cycleLanguage()" title="Promjena jezika">
                     <span class="lang-icon">🌐</span>
                     <span id="langText">HR</span>
                 </button>
                 <button class="info-btn" onclick="openInfoModal()" title="Informacije">ℹ️</button>
             </div>
         </div>
-        
+
         <div class="input-group">
             <label for="targetValue" id="inputLabel">Željena dimenzija (mm):</label>
-            <input type="text" id="targetValue" placeholder="npr. 47.385 ili 47,385" autocomplete="off" inputmode="decimal">
+            <div class="input-wrapper">
+                <input type="text" id="targetValue"
+                    placeholder="npr. 47.385 ili 47,385"
+                    autocomplete="off"
+                    inputmode="decimal"
+                    aria-label="Unos dimenzije u milimetrima">
+                <button class="clear-btn" id="clearBtn" onclick="clearInput()" title="Obriši">✕</button>
+            </div>
+            <div class="input-hint" id="inputHint"></div>
         </div>
-        
-        <button class="button" onclick="calculate()">
+
+        <div class="history-section hide" id="historySection">
+            <div class="history-label" id="historyLabel">Nedavne pretrage:</div>
+            <div class="history-chips" id="historyChips"></div>
+        </div>
+
+        <button class="button" id="calcBtn" onclick="calculate()">
             <span>🔍</span>
             <span id="calculateBtn">Izračunaj kombinacije</span>
         </button>
-        
+
         <div id="results" class="results hide"></div>
     </div>
-    
+
+    <!-- Info Modal -->
     <div id="infoModal" class="modal hide">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle">ℹ️ Informacije o kalkulatoru</h2>
                 <button class="close-btn" onclick="closeInfoModal()">✕</button>
             </div>
-            
+
             <div class="info-section">
                 <h3 id="infoLimitsTitle">📊 Ograničenja po dimenzijama</h3>
                 <div class="info-item">
@@ -652,7 +650,7 @@
                     <span id="infoRange3Desc">Traži samo 1 najpraktičniju kombinaciju</span>
                 </div>
             </div>
-            
+
             <div class="info-section">
                 <h3 id="infoDecimalsTitle">🔢 Preciznost decimala</h3>
                 <div class="info-item">
@@ -664,582 +662,693 @@
                     <span id="infoDec2Desc">Omogućen unos do 2 decimale (npr. 450.25)</span>
                 </div>
             </div>
-            
+
             <div class="info-section">
                 <h3 id="infoOtherTitle">💡 Dodatne informacije</h3>
-                <div class="info-item">
-                    <span id="infoMax">Maksimalna moguća dimenzija: <strong>715.295 mm</strong> (zbroj svih pločica u setu)</span>
-                </div>
-                <div class="info-item">
-                    <span id="infoInput">Možete koristiti decimalnu točku (.) ili zarez (,)</span>
-                </div>
-                <div class="info-item">
-                    <span id="infoBlocks">Svaka pločica se može koristiti samo jednom po kombinaciji</span>
-                </div>
-                <div class="info-item">
-                    <span id="infoMaxBlocks">Maksimalno pločica po kombinaciji: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong></span>
-                </div>
+                <div class="info-item"><span id="infoMax">Maksimalna moguća dimenzija: <strong>715.295 mm</strong></span></div>
+                <div class="info-item"><span id="infoInput">Možete koristiti decimalnu točku (.) ili zarez (,)</span></div>
+                <div class="info-item"><span id="infoBlocks">Svaka pločica se može koristiti samo jednom po kombinaciji</span></div>
+                <div class="info-item"><span id="infoMaxBlocks">Maksimalno pločica: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | &gt;400mm: 20</strong></span></div>
+                <div class="info-item"><span id="infoShortcut">Tipkovnički prečac: <strong>Enter</strong> = izračunaj, <strong>Escape</strong> = zatvori modal</span></div>
             </div>
-            
+
             <div class="info-section">
-                <h3 id="infoBlocksTitle">📦 Dostupne pločice u setu (87 komada)</h3>
-                <div class="blocks-grid" id="blocksGrid">
-                    <!-- Pločice će biti dinamički generirane s bojama -->
+                <h3 id="infoBlocksTitle">📦 Legenda boja + dostupne pločice (87 komada)</h3>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-dot large"></div> <span id="legendLarge">≥ 10 mm</span></div>
+                    <div class="legend-item"><div class="legend-dot medium"></div> <span id="legendMedium">1.5 – 9.5 mm</span></div>
+                    <div class="legend-item"><div class="legend-dot small"></div> <span id="legendSmall">1.01 – 1.49 mm</span></div>
+                    <div class="legend-item"><div class="legend-dot tiny"></div> <span id="legendTiny">0.5 – 1.009 mm</span></div>
                 </div>
+                <div class="blocks-grid" id="blocksGrid"></div>
             </div>
-            
+
             <div class="info-section">
                 <h3 id="infoAuthorTitle">👨‍💻 O programu</h3>
                 <div class="author-info">
-                    <p><strong id="authorLabel">Autor:</strong> Josip Sinković <span class="version" id="versionLabel">v1.2 (2025)</span></p>
+                    <p><strong id="authorLabel">Autor:</strong> Josip Sinković <span class="version" id="versionLabel">v2.0 (2025)</span></p>
                     <p><strong>Email:</strong> <a href="mailto:motorola10@gmail.com">motorola10@gmail.com</a></p>
-                   <p><strong>Web:</strong> <a href="https://kikiriki321.github.io/etaloni/" target="_blank">kikiriki321.github.io/etaloni</a></p>
-                    <p style="margin-top: 12px; font-style: italic;" id="authorNote">Program napravljen za kolege koji ne znaju računati napamet! 😄</p>
+                    <p><strong>Web:</strong> <a href="https://kikiriki321.github.io/etaloni/" target="_blank">kikiriki321.github.io/etaloni</a></p>
+                    <p style="margin-top:12px; font-style:italic;" id="authorNote">Program napravljen za kolege koji ne znaju računati napamet! 😄</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
+
     <script>
-        const translations = {
-            hr: {
-                mainTitle: 'Kalkulator mjernih pločica',
-                subtitle: 'Pronađite optimalnu kombinaciju etalona',
-                inputLabel: 'Željena dimenzija (mm):',
-                inputPlaceholder: 'npr. 47.385 ili 47,385',
-                calculateBtn: 'Izračunaj kombinacije',
-                themeLight: 'Svijetla',
-                themeDark: 'Tamna',
-                searching: 'Tražim optimalne kombinacije...',
-                error: 'Greška',
-                errorMessage: 'Molimo unesite ispravnu pozitivnu vrijednost.',
-                tooLarge: 'Dimenzija prevelika',
-                maxPossible: 'Maksimalna moguća dimenzija sa svim pločicama iz seta je',
-                tip: 'Savjet: Za veće dimenzije koristite dodatne setove pločica',
-                notPossible: 'Nije moguće sastaviti dimenziju',
-                checkValue: 'Provjerite je li unesena vrijednost u rasponu mogućih kombinacija.',
-                reason: 'Razlog',
-                checkedCombinations: 'Provjereno',
-                combinationsLower: 'kombinacija',
-                nearestDimension: 'Najbliža moguća dimenzija',
-                or: 'ili',
-                optimalFound: 'Optimalna kombinacija pronađena',
-                largeInfo: 'Za dimenzije > 200mm prikazujem samo najpraktičniju kombinaciju',
-                found: 'Pronađeno',
-                best: 'najboljih',
-                combinations: 'kombinacija',
-                mediumInfo: 'Za dimenzije 100-200mm prikazujem samo prvih 5 rješenja',
-                showing: 'Prikazujem prvih',
-                bestSolutions: 'najboljih rješenja',
-                showingAll: 'Prikazujem svih',
-                combination: 'Kombinacija',
-                block: 'pločica',
-                blocks2_4: 'pločice',
-                blocks5plus: 'pločica',
-                total: 'Ukupno',
-                showAll: 'Prikaži svih',
-                showFirst: 'Prikaži samo prvih',
-                modalTitle: 'Informacije o kalkulatoru',
-                infoLimitsTitle: 'Ograničenja po dimenzijama',
-                infoRange1: '≤ 100 mm:',
-                infoRange1Desc: 'Traži do 100 kombinacija, prikazuje prvih 10 najboljih',
-                infoRange2: '100 - 200 mm:',
-                infoRange2Desc: 'Traži samo 5 najboljih kombinacija',
-                infoRange3: '> 200 mm:',
-                infoRange3Desc: 'Traži samo 1 najpraktičniju kombinaciju',
-                infoDecimalsTitle: 'Preciznost decimala',
-                infoDec1: '≤ 400 mm:',
-                infoDec1Desc: 'Omogućen unos do 3 decimale (npr. 125.375)',
-                infoDec2: '> 400 mm:',
-                infoDec2Desc: 'Omogućen unos do 2 decimale (npr. 450.25)',
-                infoOtherTitle: 'Dodatne informacije',
-                infoMax: 'Maksimalna moguća dimenzija: <strong>715.295 mm</strong> (zbroj svih pločica u setu)',
-                infoInput: 'Možete koristiti decimalnu točku (.) ili zarez (,)',
-                infoBlocks: 'Svaka pločica se može koristiti samo jednom po kombinaciji',
-                infoMaxBlocks: 'Maksimalno pločica po kombinaciji: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
-                infoBlocksTitle: 'Dostupne pločice u setu (87 komada)',
-                infoAuthorTitle: 'O programu',
-                authorLabel: 'Autor:',
-                versionLabel: 'v1.2 (2025)',
-                authorNote: 'Program napravljen za kolege koji ne znaju računati napamet! 😄'
-            },
-            en: {
-                mainTitle: 'Gauge Block Calculator',
-                subtitle: 'Find the optimum combination of gauge blocks',
-                inputLabel: 'Desired dimension (mm):',
-                inputPlaceholder: 'e.g. 47.385 or 47,385',
-                calculateBtn: 'Calculate combinations',
-                themeLight: 'Light',
-                themeDark: 'Dark',
-                searching: 'Searching for optimum combinations...',
-                error: 'Error',
-                errorMessage: 'Please enter a valid positive value.',
-                tooLarge: 'Dimension too large',
-                maxPossible: 'Maximum possible dimension with all blocks in the set is',
-                tip: 'Tip: Use additional gauge block sets for larger dimensions',
-                notPossible: 'Cannot build dimension',
-                checkValue: 'Please check if the entered value is within the possible range.',
-                reason: 'Reason',
-                checkedCombinations: 'Checked',
-                combinationsLower: 'combinations',
-                nearestDimension: 'Nearest possible dimension',
-                or: 'or',
-                optimalFound: 'Optimum combination found',
-                largeInfo: 'For dimensions > 200mm showing only the most practical combination',
-                found: 'Found',
-                best: 'best',
-                combinations: 'combinations',
-                mediumInfo: 'For dimensions 100-200mm showing only first 5 solutions',
-                showing: 'Showing first',
-                bestSolutions: 'best solutions',
-                showingAll: 'Showing all',
-                combination: 'Combination',
-                block: 'block',
-                blocks2_4: 'blocks',
-                blocks5plus: 'blocks',
-                total: 'Total',
-                showAll: 'Show all',
-                showFirst: 'Show only first',
-                modalTitle: 'Calculator Information',
-                infoLimitsTitle: 'Limits by dimensions',
-                infoRange1: '≤ 100 mm:',
-                infoRange1Desc: 'Searches up to 100 combinations, displays first 10 best',
-                infoRange2: '100 - 200 mm:',
-                infoRange2Desc: 'Searches only 5 best combinations',
-                infoRange3: '> 200 mm:',
-                infoRange3Desc: 'Searches only 1 most practical combination',
-                infoDecimalsTitle: 'Decimal precision',
-                infoDec1: '≤ 400 mm:',
-                infoDec1Desc: 'Input up to 3 decimal places allowed (e.g. 125.375)',
-                infoDec2: '> 400 mm:',
-                infoDec2Desc: 'Input up to 2 decimal places allowed (e.g. 450.25)',
-                infoOtherTitle: 'Additional information',
-                infoMax: 'Maximum possible dimension: <strong>715.295 mm</strong> (sum of all blocks in the set)',
-                infoInput: 'You can use decimal point (.) or comma (,)',
-                infoBlocks: 'Each block can only be used once per combination',
-                infoMaxBlocks: 'Maximum blocks per combination: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
-                infoBlocksTitle: 'Available blocks in the set (87 pieces)',
-                infoAuthorTitle: 'About the program',
-                authorLabel: 'Author:',
-                versionLabel: 'v1.2 (2025)',
-                authorNote: 'Program created for colleagues who can\'t calculate in their heads! 😄'
-            },
-            de: {
-                mainTitle: 'Endmaß-Rechner',
-                subtitle: 'Finden Sie die optimale Kombination von Endmaßen',
-                inputLabel: 'Gewünschtes Maß (mm):',
-                inputPlaceholder: 'z.B. 47.385 oder 47,385',
-                calculateBtn: 'Kombinationen berechnen',
-                themeLight: 'Hell',
-                themeDark: 'Dunkel',
-                searching: 'Suche nach optimalen Kombinationen...',
-                error: 'Fehler',
-                errorMessage: 'Bitte geben Sie einen gültigen positiven Wert ein.',
-                tooLarge: 'Maß zu groß',
-                maxPossible: 'Maximal mögliches Maß mit allen Endmaßen im Satz ist',
-                tip: 'Tipp: Verwenden Sie zusätzliche Endmaß-Sätze für größere Maße',
-                notPossible: 'Maß kann nicht zusammengestellt werden',
-                checkValue: 'Bitte prüfen Sie, ob der eingegebene Wert im möglichen Bereich liegt.',
-                optimalFound: 'Optimale Kombination gefunden',
-                largeInfo: 'Für Maße > 200mm wird nur die praktischste Kombination angezeigt',
-                found: 'Gefunden',
-                best: 'beste',
-                combinations: 'Kombinationen',
-                mediumInfo: 'Für Maße 100-200mm werden nur die ersten 5 Lösungen angezeigt',
-                showing: 'Zeige erste',
-                bestSolutions: 'beste Lösungen',
-                showingAll: 'Zeige alle',
-                combination: 'Kombination',
-                block: 'Endmaß',
-                blocks2_4: 'Endmaße',
-                blocks5plus: 'Endmaße',
-                total: 'Gesamt',
-                showAll: 'Alle anzeigen',
-                showFirst: 'Nur erste anzeigen',
-                modalTitle: 'Rechner-Informationen',
-                infoLimitsTitle: 'Grenzen nach Dimensionen',
-                infoRange1: '≤ 100 mm:',
-                infoRange1Desc: 'Sucht bis zu 100 Kombinationen, zeigt erste 10 beste',
-                infoRange2: '100 - 200 mm:',
-                infoRange2Desc: 'Sucht nur 5 beste Kombinationen',
-                infoRange3: '> 200 mm:',
-                infoRange3Desc: 'Sucht nur 1 praktischste Kombination',
-                infoDecimalsTitle: 'Dezimalgenauigkeit',
-                infoDec1: '≤ 400 mm:',
-                infoDec1Desc: 'Eingabe bis zu 3 Dezimalstellen erlaubt (z.B. 125.375)',
-                infoDec2: '> 400 mm:',
-                infoDec2Desc: 'Eingabe bis zu 2 Dezimalstellen erlaubt (z.B. 450.25)',
-                infoOtherTitle: 'Zusätzliche Informationen',
-                infoMax: 'Maximal mögliches Maß: <strong>715.295 mm</strong> (Summe aller Endmaße im Satz)',
-                infoInput: 'Sie können Dezimalpunkt (.) oder Komma (,) verwenden',
-                infoBlocks: 'Jedes Endmaß kann nur einmal pro Kombination verwendet werden',
-                infoMaxBlocks: 'Maximale Endmaße pro Kombination: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
-                infoBlocksTitle: 'Verfügbare Endmaße im Satz (87 Stück)',
-                infoAuthorTitle: 'Über das Programm',
-                authorLabel: 'Autor:',
-                versionLabel: 'v1.2 (2025)',
-                authorNote: 'Programm erstellt für Kollegen, die nicht im Kopf rechnen können! 😄'
-            }
-        };
+    // ─── TRANSLATIONS ──────────────────────────────────────────────────────────
+    const translations = {
+        hr: {
+            mainTitle: 'Kalkulator mjernih pločica',
+            subtitle: 'Pronađite optimalnu kombinaciju etalona',
+            inputLabel: 'Željena dimenzija (mm):',
+            inputPlaceholder: 'npr. 47.385 ili 47,385',
+            calculateBtn: 'Izračunaj kombinacije',
+            themeLight: 'Svijetla', themeDark: 'Tamna',
+            searching: 'Tražim optimalne kombinacije...',
+            error: 'Greška', errorMessage: 'Unesite ispravnu pozitivnu vrijednost.',
+            errorZero: 'Dimenzija mora biti veća od 0.',
+            tooLarge: 'Dimenzija prevelika',
+            maxPossible: 'Maksimalna moguća dimenzija sa svim pločicama je',
+            tip: 'Savjet: Za veće dimenzije koristite dodatne setove pločica',
+            notPossible: 'Nije moguće sastaviti dimenziju',
+            checkValue: 'Vrijednost nije dostižna kombinacijom dostupnih pločica.',
+            reason: 'Razlog', checkedCombinations: 'Provjereno',
+            combinationsLower: 'kombinacija',
+            nearestDimension: 'Najbliže moguće dimenzije',
+            or: 'ili',
+            optimalFound: 'Optimalna kombinacija pronađena',
+            largeInfo: 'Za dimenzije > 200mm prikazujem samo najpraktičniju kombinaciju',
+            found: 'Pronađeno', best: 'najboljih', combinations: 'kombinacija',
+            mediumInfo: 'Za dimenzije 100-200mm prikazujem samo prvih 5 rješenja',
+            showing: 'Prikazujem prvih', bestSolutions: 'najboljih rješenja',
+            showingAll: 'Prikazujem svih',
+            combination: 'Kombinacija',
+            block: 'pločica', blocks2_4: 'pločice', blocks5plus: 'pločica',
+            total: 'Ukupno',
+            showAll: 'Prikaži svih', showFirst: 'Prikaži samo prvih',
+            copyBtn: '📋 Kopiraj', copiedBtn: '✓ Kopirano',
+            historyLabel: 'Nedavne pretrage:',
+            hintDecimals: 'Za dimenzije > 400mm max 2 decimale',
+            hintNearMax: 'Blizu maksimuma (715.295 mm)',
+            modalTitle: 'Informacije o kalkulatoru',
+            infoLimitsTitle: 'Ograničenja po dimenzijama',
+            infoRange1: '≤ 100 mm:', infoRange1Desc: 'Traži do 100 kombinacija, prikazuje prvih 10 najboljih',
+            infoRange2: '100 - 200 mm:', infoRange2Desc: 'Traži samo 5 najboljih kombinacija',
+            infoRange3: '> 200 mm:', infoRange3Desc: 'Traži samo 1 najpraktičniju kombinaciju',
+            infoDecimalsTitle: 'Preciznost decimala',
+            infoDec1: '≤ 400 mm:', infoDec1Desc: 'Omogućen unos do 3 decimale (npr. 125.375)',
+            infoDec2: '> 400 mm:', infoDec2Desc: 'Omogućen unos do 2 decimale (npr. 450.25)',
+            infoOtherTitle: 'Dodatne informacije',
+            infoMax: 'Maksimalna moguća dimenzija: <strong>715.295 mm</strong> (zbroj svih pločica u setu)',
+            infoInput: 'Možete koristiti decimalnu točku (.) ili zarez (,)',
+            infoBlocks: 'Svaka pločica se može koristiti samo jednom po kombinaciji',
+            infoMaxBlocks: 'Maksimalno pločica po kombinaciji: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
+            infoShortcut: 'Tipkovnički prečac: <strong>Enter</strong> = izračunaj, <strong>Escape</strong> = zatvori modal',
+            infoBlocksTitle: 'Legenda boja + dostupne pločice (87 komada)',
+            legendLarge: '≥ 10 mm', legendMedium: '1.5 – 9.5 mm', legendSmall: '1.01 – 1.49 mm', legendTiny: '0.5 – 1.009 mm',
+            infoAuthorTitle: 'O programu',
+            authorLabel: 'Autor:', versionLabel: 'v2.0 (2025)',
+            authorNote: 'Program napravljen za kolege koji ne znaju računati napamet! 😄',
+            toastCopied: '✓ Kombinacija kopirana u međuspremnik',
+            toastInvalidPaste: '⚠️ Zalijepljeni tekst nije ispravna dimenzija'
+        },
+        en: {
+            mainTitle: 'Gauge Block Calculator',
+            subtitle: 'Find the optimum combination of gauge blocks',
+            inputLabel: 'Desired dimension (mm):',
+            inputPlaceholder: 'e.g. 47.385 or 47,385',
+            calculateBtn: 'Calculate combinations',
+            themeLight: 'Light', themeDark: 'Dark',
+            searching: 'Searching for optimum combinations...',
+            error: 'Error', errorMessage: 'Please enter a valid positive value.',
+            errorZero: 'Dimension must be greater than 0.',
+            tooLarge: 'Dimension too large',
+            maxPossible: 'Maximum possible dimension with all blocks is',
+            tip: 'Tip: Use additional gauge block sets for larger dimensions',
+            notPossible: 'Cannot build dimension',
+            checkValue: 'Value cannot be achieved with the available blocks.',
+            reason: 'Reason', checkedCombinations: 'Checked',
+            combinationsLower: 'combinations',
+            nearestDimension: 'Nearest possible dimensions',
+            or: 'or',
+            optimalFound: 'Optimum combination found',
+            largeInfo: 'For dimensions > 200mm showing only the most practical combination',
+            found: 'Found', best: 'best', combinations: 'combinations',
+            mediumInfo: 'For dimensions 100-200mm showing only first 5 solutions',
+            showing: 'Showing first', bestSolutions: 'best solutions',
+            showingAll: 'Showing all',
+            combination: 'Combination',
+            block: 'block', blocks2_4: 'blocks', blocks5plus: 'blocks',
+            total: 'Total',
+            showAll: 'Show all', showFirst: 'Show only first',
+            copyBtn: '📋 Copy', copiedBtn: '✓ Copied',
+            historyLabel: 'Recent searches:',
+            hintDecimals: 'For dimensions > 400mm max 2 decimal places',
+            hintNearMax: 'Near maximum (715.295 mm)',
+            modalTitle: 'Calculator Information',
+            infoLimitsTitle: 'Limits by dimensions',
+            infoRange1: '≤ 100 mm:', infoRange1Desc: 'Searches up to 100 combinations, displays first 10 best',
+            infoRange2: '100 - 200 mm:', infoRange2Desc: 'Searches only 5 best combinations',
+            infoRange3: '> 200 mm:', infoRange3Desc: 'Searches only 1 most practical combination',
+            infoDecimalsTitle: 'Decimal precision',
+            infoDec1: '≤ 400 mm:', infoDec1Desc: 'Input up to 3 decimal places allowed (e.g. 125.375)',
+            infoDec2: '> 400 mm:', infoDec2Desc: 'Input up to 2 decimal places allowed (e.g. 450.25)',
+            infoOtherTitle: 'Additional information',
+            infoMax: 'Maximum possible dimension: <strong>715.295 mm</strong> (sum of all blocks in the set)',
+            infoInput: 'You can use decimal point (.) or comma (,)',
+            infoBlocks: 'Each block can only be used once per combination',
+            infoMaxBlocks: 'Maximum blocks per combination: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
+            infoShortcut: 'Keyboard shortcut: <strong>Enter</strong> = calculate, <strong>Escape</strong> = close modal',
+            infoBlocksTitle: 'Color legend + available blocks (87 pieces)',
+            legendLarge: '≥ 10 mm', legendMedium: '1.5 – 9.5 mm', legendSmall: '1.01 – 1.49 mm', legendTiny: '0.5 – 1.009 mm',
+            infoAuthorTitle: 'About the program',
+            authorLabel: 'Author:', versionLabel: 'v2.0 (2025)',
+            authorNote: "Program created for colleagues who can't calculate in their heads! 😄",
+            toastCopied: '✓ Combination copied to clipboard',
+            toastInvalidPaste: '⚠️ Pasted text is not a valid dimension'
+        },
+        de: {
+            mainTitle: 'Endmaß-Rechner',
+            subtitle: 'Finden Sie die optimale Kombination von Endmaßen',
+            inputLabel: 'Gewünschtes Maß (mm):',
+            inputPlaceholder: 'z.B. 47.385 oder 47,385',
+            calculateBtn: 'Kombinationen berechnen',
+            themeLight: 'Hell', themeDark: 'Dunkel',
+            searching: 'Suche nach optimalen Kombinationen...',
+            error: 'Fehler', errorMessage: 'Bitte geben Sie einen gültigen positiven Wert ein.',
+            errorZero: 'Maß muss größer als 0 sein.',
+            tooLarge: 'Maß zu groß',
+            maxPossible: 'Maximal mögliches Maß mit allen Endmaßen ist',
+            tip: 'Tipp: Verwenden Sie zusätzliche Endmaß-Sätze für größere Maße',
+            notPossible: 'Maß kann nicht zusammengestellt werden',
+            checkValue: 'Der Wert ist mit den verfügbaren Endmaßen nicht erreichbar.',
+            reason: 'Grund', checkedCombinations: 'Geprüft',
+            combinationsLower: 'Kombinationen',
+            nearestDimension: 'Nächste mögliche Maße',
+            or: 'oder',
+            optimalFound: 'Optimale Kombination gefunden',
+            largeInfo: 'Für Maße > 200mm wird nur die praktischste Kombination angezeigt',
+            found: 'Gefunden', best: 'beste', combinations: 'Kombinationen',
+            mediumInfo: 'Für Maße 100-200mm werden nur die ersten 5 Lösungen angezeigt',
+            showing: 'Zeige erste', bestSolutions: 'beste Lösungen',
+            showingAll: 'Zeige alle',
+            combination: 'Kombination',
+            block: 'Endmaß', blocks2_4: 'Endmaße', blocks5plus: 'Endmaße',
+            total: 'Gesamt',
+            showAll: 'Alle anzeigen', showFirst: 'Nur erste anzeigen',
+            copyBtn: '📋 Kopieren', copiedBtn: '✓ Kopiert',
+            historyLabel: 'Letzte Suchen:',
+            hintDecimals: 'Für Maße > 400mm max. 2 Dezimalstellen',
+            hintNearMax: 'Nahe Maximum (715.295 mm)',
+            modalTitle: 'Rechner-Informationen',
+            infoLimitsTitle: 'Grenzen nach Dimensionen',
+            infoRange1: '≤ 100 mm:', infoRange1Desc: 'Sucht bis zu 100 Kombinationen, zeigt erste 10 beste',
+            infoRange2: '100 - 200 mm:', infoRange2Desc: 'Sucht nur 5 beste Kombinationen',
+            infoRange3: '> 200 mm:', infoRange3Desc: 'Sucht nur 1 praktischste Kombination',
+            infoDecimalsTitle: 'Dezimalgenauigkeit',
+            infoDec1: '≤ 400 mm:', infoDec1Desc: 'Eingabe bis zu 3 Dezimalstellen erlaubt (z.B. 125.375)',
+            infoDec2: '> 400 mm:', infoDec2Desc: 'Eingabe bis zu 2 Dezimalstellen erlaubt (z.B. 450.25)',
+            infoOtherTitle: 'Zusätzliche Informationen',
+            infoMax: 'Maximal mögliches Maß: <strong>715.295 mm</strong> (Summe aller Endmaße im Satz)',
+            infoInput: 'Sie können Dezimalpunkt (.) oder Komma (,) verwenden',
+            infoBlocks: 'Jedes Endmaß kann nur einmal pro Kombination verwendet werden',
+            infoMaxBlocks: 'Maximale Endmaße pro Kombination: <strong>≤100mm: 12 | 100-200mm: 14 | 200-400mm: 16 | >400mm: 20</strong>',
+            infoShortcut: 'Tastenkürzel: <strong>Enter</strong> = berechnen, <strong>Escape</strong> = Modal schließen',
+            infoBlocksTitle: 'Farblegende + verfügbare Endmaße (87 Stück)',
+            legendLarge: '≥ 10 mm', legendMedium: '1.5 – 9.5 mm', legendSmall: '1.01 – 1.49 mm', legendTiny: '0.5 – 1.009 mm',
+            infoAuthorTitle: 'Über das Programm',
+            authorLabel: 'Autor:', versionLabel: 'v2.0 (2025)',
+            authorNote: 'Programm erstellt für Kollegen, die nicht im Kopf rechnen können! 😄',
+            toastCopied: '✓ Kombination in Zwischenablage kopiert',
+            toastInvalidPaste: '⚠️ Eingefügter Text ist keine gültige Maßangabe'
+        }
+    };
 
-        const gaugeBlocks = [
-            100, 90, 80, 70, 60, 50, 40, 30, 20, 10,
-            9.5, 9.0, 8.5, 8.0, 7.5, 7.0, 6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5,
-            1.49, 1.48, 1.47, 1.46, 1.45, 1.44, 1.43, 1.42, 1.41, 1.40,
-            1.39, 1.38, 1.37, 1.36, 1.35, 1.34, 1.33, 1.32, 1.31, 1.30,
-            1.29, 1.28, 1.27, 1.26, 1.25, 1.24, 1.23, 1.22, 1.21, 1.20,
-            1.19, 1.18, 1.17, 1.16, 1.15, 1.14, 1.13, 1.12, 1.11, 1.10,
-            1.09, 1.08, 1.07, 1.06, 1.05, 1.04, 1.03, 1.02, 1.01,
-            1.009, 1.008, 1.007, 1.006, 1.005, 1.004, 1.003, 1.002, 1.001, 1, 0.5
+    // ─── GAUGE BLOCKS (stored as integers × 1000 to avoid float issues) ────────
+    // Original: 100, 90, ..., 0.5
+    const gaugeBlocksRaw = [
+        100, 90, 80, 70, 60, 50, 40, 30, 20, 10,
+        9.5, 9.0, 8.5, 8.0, 7.5, 7.0, 6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5,
+        1.49, 1.48, 1.47, 1.46, 1.45, 1.44, 1.43, 1.42, 1.41, 1.40,
+        1.39, 1.38, 1.37, 1.36, 1.35, 1.34, 1.33, 1.32, 1.31, 1.30,
+        1.29, 1.28, 1.27, 1.26, 1.25, 1.24, 1.23, 1.22, 1.21, 1.20,
+        1.19, 1.18, 1.17, 1.16, 1.15, 1.14, 1.13, 1.12, 1.11, 1.10,
+        1.09, 1.08, 1.07, 1.06, 1.05, 1.04, 1.03, 1.02, 1.01,
+        1.009, 1.008, 1.007, 1.006, 1.005, 1.004, 1.003, 1.002, 1.001, 1.0, 0.5
+    ];
+
+    // Convert to integers × 1000 for exact arithmetic
+    const gaugeBlocks = gaugeBlocksRaw.map(b => Math.round(b * 1000));
+    const MAX_POSSIBLE = gaugeBlocks.reduce((s, b) => s + b, 0); // in thousandths
+
+    // ─── STATE ─────────────────────────────────────────────────────────────────
+    let allCombinations = [];
+    let currentLang = localStorage.getItem('gauge_lang') || 'hr';
+    let searchHistory = JSON.parse(localStorage.getItem('gauge_history') || '[]');
+
+    // ─── INIT ──────────────────────────────────────────────────────────────────
+    (function init() {
+        // Restore theme
+        if (localStorage.getItem('gauge_theme') === 'light') {
+            document.body.classList.add('light-mode');
+            document.getElementById('themeIcon').textContent = '🌙';
+        }
+        document.getElementById('langText').textContent = currentLang.toUpperCase();
+        updateLanguage();
+        renderHistory();
+    })();
+
+    // ─── LANGUAGE ──────────────────────────────────────────────────────────────
+    function cycleLanguage() {
+        const langs = ['hr', 'en', 'de'];
+        currentLang = langs[(langs.indexOf(currentLang) + 1) % langs.length];
+        localStorage.setItem('gauge_lang', currentLang);
+        document.getElementById('langText').textContent = currentLang.toUpperCase();
+        updateLanguage();
+        updateModalLanguage();
+    }
+
+    function updateLanguage() {
+        const t = translations[currentLang];
+        const set = (id, val) => { const el = document.getElementById(id); if (el) el.innerHTML = val; };
+        set('mainTitle', t.mainTitle);
+        set('subtitle', t.subtitle);
+        set('inputLabel', t.inputLabel);
+        document.getElementById('targetValue').placeholder = t.inputPlaceholder;
+        set('calculateBtn', t.calculateBtn);
+        document.title = t.mainTitle;
+        const isLight = document.body.classList.contains('light-mode');
+        set('themeText', isLight ? t.themeDark : t.themeLight);
+        set('historyLabel', t.historyLabel);
+        renderHistory();
+        updateInputHint();
+    }
+
+    function updateModalLanguage() {
+        const t = translations[currentLang];
+        const fields = [
+            'modalTitle', 'infoLimitsTitle', 'infoRange1', 'infoRange1Desc',
+            'infoRange2', 'infoRange2Desc', 'infoRange3', 'infoRange3Desc',
+            'infoDecimalsTitle', 'infoDec1', 'infoDec1Desc', 'infoDec2', 'infoDec2Desc',
+            'infoOtherTitle', 'infoMax', 'infoInput', 'infoBlocks', 'infoMaxBlocks',
+            'infoShortcut', 'infoBlocksTitle', 'infoAuthorTitle', 'authorLabel',
+            'versionLabel', 'authorNote', 'legendLarge', 'legendMedium', 'legendSmall', 'legendTiny'
         ];
+        fields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && t[id] !== undefined) el.innerHTML = t[id];
+        });
+        const modal = document.getElementById('modalTitle');
+        if (modal) modal.innerHTML = 'ℹ️ ' + t.modalTitle;
+    }
 
-        let allCombinations = [];
-        let showingAll = false;
-        let currentLang = 'hr';
-        const maxPossible = gaugeBlocks.reduce((sum, block) => sum + block, 0);
+    // ─── THEME ─────────────────────────────────────────────────────────────────
+    function toggleTheme() {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        document.getElementById('themeIcon').textContent = isLight ? '🌙' : '☀️';
+        document.getElementById('themeText').textContent = isLight
+            ? translations[currentLang].themeDark
+            : translations[currentLang].themeLight;
+        localStorage.setItem('gauge_theme', isLight ? 'light' : 'dark');
+    }
 
-        function getBlockClass(value) {
-            if (value >= 10) return 'large';
-            if (value >= 1.5) return 'medium';
-            if (value >= 1.01) return 'small';
-            return 'tiny';
+    // ─── MODAL ─────────────────────────────────────────────────────────────────
+    function openInfoModal() {
+        document.getElementById('infoModal').classList.remove('hide');
+        document.getElementById('blocksGrid').innerHTML = generateColoredBlocksGrid();
+        updateModalLanguage();
+    }
+
+    function closeInfoModal() {
+        document.getElementById('infoModal').classList.add('hide');
+    }
+
+    // ─── TOAST ─────────────────────────────────────────────────────────────────
+    let toastTimer = null;
+    function showToast(msg, duration = 2500) {
+        const toast = document.getElementById('toast');
+        toast.innerHTML = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    // ─── HISTORY ───────────────────────────────────────────────────────────────
+    function addToHistory(value) {
+        searchHistory = searchHistory.filter(v => v !== value);
+        searchHistory.unshift(value);
+        searchHistory = searchHistory.slice(0, 5);
+        localStorage.setItem('gauge_history', JSON.stringify(searchHistory));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const section = document.getElementById('historySection');
+        const chips = document.getElementById('historyChips');
+        if (!searchHistory.length) { section.classList.add('hide'); return; }
+        section.classList.remove('hide');
+        document.getElementById('historyLabel').textContent = translations[currentLang].historyLabel;
+        chips.innerHTML = searchHistory.map(v =>
+            `<button class="history-chip" onclick="useHistory('${v}')">${v} mm</button>`
+        ).join('');
+    }
+
+    function useHistory(value) {
+        document.getElementById('targetValue').value = value;
+        document.getElementById('clearBtn').classList.add('visible');
+        updateInputHint();
+        calculate();
+    }
+
+    // ─── INPUT HANDLING ────────────────────────────────────────────────────────
+    function clearInput() {
+        const input = document.getElementById('targetValue');
+        input.value = '';
+        input.classList.remove('invalid');
+        document.getElementById('clearBtn').classList.remove('visible');
+        document.getElementById('inputHint').textContent = '';
+        document.getElementById('inputHint').className = 'input-hint';
+        input.focus();
+    }
+
+    function updateInputHint() {
+        const t = translations[currentLang];
+        const input = document.getElementById('targetValue');
+        const hint = document.getElementById('inputHint');
+        const raw = input.value.replace(',', '.');
+        const val = parseFloat(raw);
+        hint.className = 'input-hint';
+        hint.textContent = '';
+        if (!raw || isNaN(val)) return;
+        if (val > 400) {
+            hint.textContent = t.hintDecimals;
+            hint.classList.add('warning');
+        } else if (val > 600) {
+            hint.textContent = t.hintNearMax;
+            hint.classList.add('warning');
         }
+    }
 
-        function generateColoredBlocksGrid() {
-            const blocks = [
-                0.5, 1.0, 1.001, 1.002, 1.003, 1.004, 1.005, 1.006, 1.007, 1.008, 1.009,
-                1.01, 1.02, 1.03, 1.04, 1.05, 1.06, 1.07, 1.08, 1.09,
-                1.10, 1.11, 1.12, 1.13, 1.14, 1.15, 1.16, 1.17, 1.18, 1.19,
-                1.20, 1.21, 1.22, 1.23, 1.24, 1.25, 1.26, 1.27, 1.28, 1.29,
-                1.30, 1.31, 1.32, 1.33, 1.34, 1.35, 1.36, 1.37, 1.38, 1.39,
-                1.40, 1.41, 1.42, 1.43, 1.44, 1.45, 1.46, 1.47, 1.48, 1.49,
-                1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5,
-                10, 20, 30, 40, 50, 60, 70, 80, 90, 100
-            ];
-            
-            return blocks.map(block => 
-                `<div class="block-chip ${getBlockClass(block)}">${block}</div>`
-            ).join('');
+    document.getElementById('targetValue').addEventListener('input', function(e) {
+        let value = e.target.value;
+        // Allow comma OR dot as decimal separator, strip other non-numeric chars
+        value = value.replace(',', '.');
+        value = value.replace(/[^\d.]/g, '');
+        const parts = value.split('.');
+        if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
+        if (parts.length === 2) {
+            const intPart = parseFloat(parts[0]) || 0;
+            const maxDec = intPart > 400 ? 2 : 3;
+            if (parts[1].length > maxDec) value = parts[0] + '.' + parts[1].substring(0, maxDec);
         }
+        e.target.value = value;
+        e.target.classList.remove('invalid');
+        document.getElementById('clearBtn').classList.toggle('visible', value.length > 0);
+        updateInputHint();
+    });
 
-        function cycleLanguage() {
-            const langs = ['hr', 'en', 'de'];
-            const currentIndex = langs.indexOf(currentLang);
-            currentLang = langs[(currentIndex + 1) % langs.length];
-            document.getElementById('langText').textContent = currentLang.toUpperCase();
-            updateLanguage();
-            updateModalLanguage();
+    // Paste handling — auto-sanitise pasted values
+    document.getElementById('targetValue').addEventListener('paste', function(e) {
+        e.preventDefault();
+        const pasted = (e.clipboardData || window.clipboardData).getData('text');
+        const cleaned = pasted.replace(',', '.').replace(/[^\d.]/g, '');
+        const val = parseFloat(cleaned);
+        if (isNaN(val) || val <= 0) {
+            showToast(translations[currentLang].toastInvalidPaste);
+            return;
         }
+        this.value = cleaned;
+        document.getElementById('clearBtn').classList.add('visible');
+        updateInputHint();
+    });
 
-        function updateLanguage() {
-            const t = translations[currentLang];
-            document.getElementById('mainTitle').textContent = t.mainTitle;
-            document.getElementById('subtitle').textContent = t.subtitle;
-            document.getElementById('inputLabel').textContent = t.inputLabel;
-            document.getElementById('targetValue').placeholder = t.inputPlaceholder;
-            document.getElementById('calculateBtn').textContent = t.calculateBtn;
-            document.title = t.mainTitle;
-            const isLight = document.body.classList.contains('light-mode');
-            document.getElementById('themeText').textContent = isLight ? t.themeDark : t.themeLight;
-        }
+    document.getElementById('targetValue').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') calculate();
+    });
 
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            const t = translations[currentLang];
-            document.getElementById('themeIcon').textContent = isLight ? '🌙' : '☀️';
-            document.getElementById('themeText').textContent = isLight ? t.themeDark : t.themeLight;
-        }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeInfoModal();
+    });
 
-        function openInfoModal() {
-            document.getElementById('infoModal').classList.remove('hide');
-            
-            // Generiši obojene pločice
-            const blocksGrid = document.getElementById('blocksGrid');
-            if (blocksGrid) {
-                blocksGrid.innerHTML = generateColoredBlocksGrid();
+    // Close modal on backdrop click
+    document.getElementById('infoModal').addEventListener('click', function(e) {
+        if (e.target === this) closeInfoModal();
+    });
+
+    // ─── CORE ALGORITHM (integer arithmetic) ────────────────────────────────────
+    function findCombinations(targetInt, maxResults, maxIterations, maxDepth) {
+        const results = new Map();
+        let iters = 0;
+
+        function dfs(remaining, combo, startIdx, depth) {
+            if (++iters > maxIterations) return;
+            if (depth > maxDepth) return;
+            if (results.size >= maxResults) return;
+
+            if (remaining === 0) {
+                const key = combo.slice().sort((a, b) => b - a).join(',');
+                if (!results.has(key)) results.set(key, [...combo]);
+                return;
             }
-            
-            setTimeout(() => {
-                updateModalLanguage();
-            }, 10);
-        }
-        
-        function updateModalLanguage() {
-            const t = translations[currentLang];
-            const elements = {
-                'modalTitle': 'ℹ️ ' + t.modalTitle,
-                'infoLimitsTitle': '📊 ' + t.infoLimitsTitle,
-                'infoRange1': t.infoRange1,
-                'infoRange1Desc': t.infoRange1Desc,
-                'infoRange2': t.infoRange2,
-                'infoRange2Desc': t.infoRange2Desc,
-                'infoRange3': t.infoRange3,
-                'infoRange3Desc': t.infoRange3Desc,
-                'infoDecimalsTitle': '🔢 ' + t.infoDecimalsTitle,
-                'infoDec1': t.infoDec1,
-                'infoDec1Desc': t.infoDec1Desc,
-                'infoDec2': t.infoDec2,
-                'infoDec2Desc': t.infoDec2Desc,
-                'infoOtherTitle': '💡 ' + t.infoOtherTitle,
-                'infoInput': t.infoInput,
-                'infoBlocks': t.infoBlocks,
-                'infoMaxBlocks': t.infoMaxBlocks,
-                'infoBlocksTitle': '📦 ' + t.infoBlocksTitle,
-                'infoAuthorTitle': '👨‍💻 ' + t.infoAuthorTitle,
-                'authorLabel': t.authorLabel,
-                'versionLabel': t.versionLabel,
-                'authorNote': t.authorNote
-            };
-            
-            for (const [id, text] of Object.entries(elements)) {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.innerHTML = text; // Koristimo innerHTML umjesto textContent
-                }
-            }
-            
-            const infoMaxEl = document.getElementById('infoMax');
-            if (infoMaxEl) {
-                infoMaxEl.innerHTML = t.infoMax;
-            }
-        }
-        
-        function closeInfoModal() {
-            document.getElementById('infoModal').classList.add('hide');
-        }
+            if (remaining < 0) return;
 
-        function round3(num) {
-            return Math.round(num * 1000) / 1000;
-        }
-
-        function getBlockWord(count) {
-            const t = translations[currentLang];
-            if (count === 1) return t.block;
-            if (currentLang === 'hr' && count >= 2 && count <= 4) return t.blocks2_4;
-            return t.blocks5plus;
-        }
-
-     function findCombinationsOptimized(target, maxResults, maxIterations, maxDepth) {
-            const results = new Map();
-            const targetRounded = round3(target);
-            const tolerance = 0.0005;
-            let iterationCount = 0;
-            
-            
-            function findWithDFS(remaining, combo, startIdx, depth) {
-                iterationCount++;
-                
-                // Sigurnosni ventil - prekinuti ako je previše iteracija
-                if (iterationCount > maxIterations) return;
-                
-                // POVEĆAN LIMIT: sa 8 na 12 pločica
-                // DINAMIČKI LIMIT: ovisno o veličini dimenzije
-                if (depth > maxDepth) return;
+            for (let i = startIdx; i < gaugeBlocks.length; i++) {
                 if (results.size >= maxResults) return;
-                const remainingRounded = round3(remaining);
-                if (Math.abs(remainingRounded) < tolerance) {
-                    const key = combo.slice().sort((a,b) => b - a).join(',');
-                    if (!results.has(key)) {
-                        results.set(key, [...combo]);
-                    }
-                    return;
-                }
-                if (remainingRounded < -tolerance) return;
-                for (let i = startIdx; i < gaugeBlocks.length; i++) {
-                    if (results.size >= maxResults) return;
-                    if (iterationCount > maxIterations) return;
-                    const block = gaugeBlocks[i];
-                    if (block > remainingRounded + tolerance) continue;
-                    combo.push(block);
-                    findWithDFS(remainingRounded - block, combo, i + 1, depth + 1);
-                    combo.pop();
-                }
+                if (iters > maxIterations) return;
+                const block = gaugeBlocks[i];
+                if (block > remaining) continue;
+                combo.push(block);
+                dfs(remaining - block, combo, i + 1, depth + 1);
+                combo.pop();
             }
-            findWithDFS(targetRounded, [], 0, 0);
-            const sortedResults = Array.from(results.values());
-            sortedResults.sort((a, b) => {
-                if (a.length !== b.length) return a.length - b.length;
-                for (let i = 0; i < Math.min(a.length, b.length); i++) {
-                    if (b[i] !== a[i]) return b[i] - a[i];
-                }
-                return 0;
-            });
-            return { results: sortedResults, iterations: iterationCount };
-        }
-        
-        function findNearestPossible(target) {
-            const step = 0.001;
-            const maxSearchRange = 5; // Traži do ±5mm
-            
-            // Traži najbližu manju dimenziju
-            for (let i = step; i <= maxSearchRange; i += step) {
-                const lower = round3(target - i);
-                if (lower < 0.5) break;
-                const result = findCombinationsOptimized(lower, 1);
-                if (result.results.length > 0) {
-                    return { lower: lower, upper: null };
-                }
-            }
-            
-            // Traži najbližu veću dimenziju
-            for (let i = step; i <= maxSearchRange; i += step) {
-                const upper = round3(target + i);
-                if (upper > maxPossible) break;
-                const result = findCombinationsOptimized(upper, 1);
-                if (result.results.length > 0) {
-                    return { lower: null, upper: upper };
-                }
-            }
-            
-            return { lower: null, upper: null };
         }
 
-        function calculate() {
-            const t = translations[currentLang];
-            const input = document.getElementById('targetValue');
-            const resultsDiv = document.getElementById('results');
-            let inputValue = input.value.replace(',', '.');
-            const target = parseFloat(inputValue);
-            if (isNaN(target) || target <= 0) {
-                resultsDiv.innerHTML = `<div class="result-card error"><strong>⚠️ ${t.error}</strong><br>${t.errorMessage}</div>`;
-                resultsDiv.classList.remove('hide');
-                return;
+        dfs(targetInt, [], 0, 0);
+
+        const sorted = Array.from(results.values()).sort((a, b) => {
+            if (a.length !== b.length) return a.length - b.length;
+            for (let i = 0; i < Math.min(a.length, b.length); i++) {
+                if (b[i] !== a[i]) return b[i] - a[i];
             }
-            if (target > maxPossible) {
-                resultsDiv.innerHTML = `<div class="result-card error"><strong>❌ ${t.tooLarge}: ${target.toFixed(3)} mm</strong><p style="margin-top: 12px; font-size: 14px;">${t.maxPossible} <strong>${maxPossible.toFixed(3)} mm</strong></p><p style="margin-top: 8px; font-size: 13px; opacity: 0.8;">💡 ${t.tip}</p></div>`;
-                resultsDiv.classList.remove('hide');
-                return;
+            return 0;
+        });
+
+        return { results: sorted, iterations: iters };
+    }
+
+    function findNearest(targetInt) {
+        // Search outward in both directions simultaneously
+        for (let delta = 1; delta <= 5000; delta++) {
+            const lower = targetInt - delta;
+            const upper = targetInt + delta;
+            let foundLower = null, foundUpper = null;
+
+            if (lower >= 500) { // min block is 0.5mm = 500 thousandths
+                const r = findCombinations(lower, 1, 50000, 12);
+                if (r.results.length) foundLower = lower;
             }
-            resultsDiv.innerHTML = `<div class="loading"><div class="spinner"></div>⚙️ ${t.searching}</div>`;
+            if (upper <= MAX_POSSIBLE) {
+                const r = findCombinations(upper, 1, 50000, 12);
+                if (r.results.length) foundUpper = upper;
+            }
+
+            if (foundLower || foundUpper) {
+                return {
+                    lower: foundLower ? (foundLower / 1000).toFixed(3) : null,
+                    upper: foundUpper ? (foundUpper / 1000).toFixed(3) : null
+                };
+            }
+        }
+        return { lower: null, upper: null };
+    }
+
+    // ─── CALCULATE ─────────────────────────────────────────────────────────────
+    function calculate() {
+        const t = translations[currentLang];
+        const input = document.getElementById('targetValue');
+        const resultsDiv = document.getElementById('results');
+        const raw = input.value.replace(',', '.');
+        const target = parseFloat(raw);
+
+        input.classList.remove('invalid');
+
+        if (!raw || isNaN(target)) {
+            input.classList.add('invalid');
+            resultsDiv.innerHTML = `<div class="result-card error"><strong>⚠️ ${t.error}</strong><br>${t.errorMessage}</div>`;
             resultsDiv.classList.remove('hide');
-            showingAll = false;
-            setTimeout(() => {
-                let maxResults;
-                if (target > 200) {
-                    maxResults = 1;
-                } else if (target > 100) {
-                    maxResults = 5;
-                } else {
-                    maxResults = 100;
-                }
-                let maxIterations, maxDepth;
-if (target > 400) {
-    maxIterations = 250000;
-    maxDepth = 20;
-} else if (target > 200) {
-    maxIterations = 200000;
-    maxDepth = 16;
-} else if (target > 100) {
-    maxIterations = 150000;
-    maxDepth = 14;
-} else {
-    maxIterations = 100000;
-    maxDepth = 12;
-}
-const result = findCombinationsOptimized(target, maxResults, maxIterations, maxDepth);
-                allCombinations = result.results;
-                
-                // Ako nije pronađeno rješenje, potraži najbliže moguće
-                if (allCombinations.length === 0) {
-                    const nearest = findNearestPossible(target);
-                    let nearestText = '';
-                    
-                    if (nearest.lower && nearest.upper) {
-                        nearestText = `<strong>${t.nearestDimension || 'Najbliže moguće dimenzije'}:</strong> ${nearest.lower.toFixed(3)} mm ${t.or || 'ili'} ${nearest.upper.toFixed(3)} mm`;
-                    } else if (nearest.lower) {
-                        nearestText = `<strong>${t.nearestDimension || 'Najbliža moguća dimenzija'}:</strong> ${nearest.lower.toFixed(3)} mm`;
-                    } else if (nearest.upper) {
-                        nearestText = `<strong>${t.nearestDimension || 'Najbliža moguća dimenzija'}:</strong> ${nearest.upper.toFixed(3)} mm`;
-                    }
-                    
-                    resultsDiv.innerHTML = `<div class="result-card error">
-                        <strong>❌ ${t.notPossible} ${target.toFixed(3)} mm</strong>
-                        <p style="margin-top: 16px; font-size: 14px;">💡 <strong>${t.reason || 'Razlog'}:</strong></p>
-                        <ul style="margin: 8px 0 0 20px; font-size: 13px; line-height: 1.8;">
-                            <li>${t.checkedCombinations || 'Provjereno'} ${result.iterations.toLocaleString()}+ ${t.combinationsLower || 'kombinacija'}</li>
-                            ${nearestText ? `<li>${nearestText}</li>` : ''}
-                        </ul>
-                    </div>`;
-                    return;
-                }
-                
-                displayResults(false);
-            }, 50);
+            return;
         }
 
-        function displayResults(showAll) {
-            const t = translations[currentLang];
-            const resultsDiv = document.getElementById('results');
-            const target = parseFloat(document.getElementById('targetValue').value.replace(',', '.'));
-            let initialShowCount;
-            let isVeryLarge = false;
-            let isLargeTarget = false;
-            if (target > 200) {
-                initialShowCount = 1;
-                isVeryLarge = true;
-            } else if (target > 100) {
-                initialShowCount = 5;
-                isLargeTarget = true;
-            } else {
-                initialShowCount = 10;
-            }
+        if (target <= 0) {
+            input.classList.add('invalid');
+            resultsDiv.innerHTML = `<div class="result-card error"><strong>⚠️ ${t.error}</strong><br>${t.errorZero}</div>`;
+            resultsDiv.classList.remove('hide');
+            return;
+        }
+
+        const targetInt = Math.round(target * 1000);
+
+        if (targetInt > MAX_POSSIBLE) {
+            resultsDiv.innerHTML = `
+                <div class="result-card error">
+                    <strong>❌ ${t.tooLarge}: ${target.toFixed(3)} mm</strong>
+                    <p style="margin-top:12px;font-size:14px;">${t.maxPossible} <strong>${(MAX_POSSIBLE/1000).toFixed(3)} mm</strong></p>
+                    <p style="margin-top:8px;font-size:13px;opacity:0.8;">💡 ${t.tip}</p>
+                </div>`;
+            resultsDiv.classList.remove('hide');
+            return;
+        }
+
+        // Show spinner
+        resultsDiv.innerHTML = `<div class="loading"><div class="spinner"></div>⚙️ ${t.searching}</div>`;
+        resultsDiv.classList.remove('hide');
+
+        // Run in next tick to allow spinner to render
+        setTimeout(() => {
+            let maxResults, maxIterations, maxDepth;
+            if (target > 200)      { maxResults = 1;   maxIterations = 250000; maxDepth = 20; }
+            else if (target > 100) { maxResults = 5;   maxIterations = 150000; maxDepth = 14; }
+            else                   { maxResults = 100; maxIterations = 100000; maxDepth = 12; }
+
+            const result = findCombinations(targetInt, maxResults, maxIterations, maxDepth);
+            allCombinations = result.results;
+
             if (allCombinations.length === 0) {
-                resultsDiv.innerHTML = `<div class="result-card error"><strong>❌ ${t.notPossible} ${target.toFixed(3)} mm</strong><p style="margin-top: 8px; font-size: 14px;">${t.checkValue}</p></div>`;
+                const nearest = findNearest(targetInt);
+                let nearestHtml = '';
+                if (nearest.lower && nearest.upper) {
+                    nearestHtml = `<strong>${t.nearestDimension}:</strong> ${nearest.lower} mm ${t.or} ${nearest.upper} mm`;
+                } else if (nearest.lower) {
+                    nearestHtml = `<strong>${t.nearestDimension}:</strong> ${nearest.lower} mm`;
+                } else if (nearest.upper) {
+                    nearestHtml = `<strong>${t.nearestDimension}:</strong> ${nearest.upper} mm`;
+                }
+                resultsDiv.innerHTML = `
+                    <div class="result-card error">
+                        <strong>❌ ${t.notPossible} ${target.toFixed(3)} mm</strong>
+                        <p style="margin-top:12px;font-size:14px;">💡 <strong>${t.reason}:</strong> ${t.checkValue}</p>
+                        <p style="margin-top:8px;font-size:14px;">${nearestHtml}</p>
+                    </div>`;
                 return;
             }
-            const toShow = showAll ? allCombinations : allCombinations.slice(0, initialShowCount);
-            let html = '';
-            if (isVeryLarge && !showAll) {
-                html += `<div class="result-card info"><strong>✨ ${t.optimalFound}</strong><br><span style="font-size: 14px;">${t.largeInfo}</span></div>`;
-            } else if (isLargeTarget && !showAll) {
-                html += `<div class="result-card info"><strong>✨ ${t.found} ${allCombinations.length} ${allCombinations.length >= 5 ? t.best : ''} ${t.combinations}</strong><br><span style="font-size: 14px;">${t.mediumInfo}</span></div>`;
-            } else if (!isLargeTarget && !isVeryLarge && !showAll && allCombinations.length > initialShowCount) {
-                html += `<div class="result-card info"><strong>✨ ${t.found} ${allCombinations.length} ${t.combinations}</strong><br><span style="font-size: 14px;">${t.showing} ${initialShowCount} ${t.bestSolutions}</span></div>`;
-            } else if (showAll) {
-                html += `<div class="result-card info"><strong>📋 ${t.showingAll} ${allCombinations.length} ${t.combinations}</strong></div>`;
-            }
-            toShow.forEach((combo, index) => {
-                const sum = round3(combo.reduce((a, b) => a + b, 0));
-                html += `<div class="result-card"><div class="result-header"><span class="result-title">🔧 ${t.combination} ${index + 1}</span><span class="block-count">${combo.length} ${getBlockWord(combo.length)}</span></div><div class="blocks-list">${combo.map(b => b.toFixed(3)).join(' mm + ')} mm</div><div class="blocks-visual">${combo.map(b => `<div class="block-visual ${getBlockClass(b)}" title="${b.toFixed(3)} mm">${b.toFixed(3)}</div>`).join('')}</div><div class="sum-display">✓ ${t.total}: ${sum.toFixed(3)} mm</div></div>`;
-            });
-            if (!isLargeTarget && !isVeryLarge && !showAll && allCombinations.length > initialShowCount) {
-                html += `<button class="button secondary" onclick="showAllResults()">📂 ${t.showAll} ${allCombinations.length} ${t.combinations}</button>`;
-            } else if (!isLargeTarget && !isVeryLarge && showAll && allCombinations.length > initialShowCount) {
+
+            // Add to history on success
+            addToHistory(target.toFixed(target % 1 === 0 ? 0 : raw.includes('.') ? raw.split('.')[1].length : 3));
+            displayResults(false);
+        }, 30);
+    }
+
+    // ─── DISPLAY ───────────────────────────────────────────────────────────────
+    function displayResults(showAll) {
+        const t = translations[currentLang];
+        const resultsDiv = document.getElementById('results');
+        const target = parseFloat(document.getElementById('targetValue').value.replace(',', '.'));
+
+        let initialShowCount;
+        if (target > 200)      { initialShowCount = 1; }
+        else if (target > 100) { initialShowCount = 5; }
+        else                   { initialShowCount = 10; }
+
+        const isVeryLarge  = target > 200;
+        const isLargeRange = target > 100 && target <= 200;
+        const toShow = showAll ? allCombinations : allCombinations.slice(0, initialShowCount);
+
+        let html = '';
+
+        // Info banner
+        if (isVeryLarge && !showAll) {
+            html += `<div class="result-card info"><strong>✨ ${t.optimalFound}</strong><br><span style="font-size:14px;">${t.largeInfo}</span></div>`;
+        } else if (isLargeRange && !showAll) {
+            html += `<div class="result-card info"><strong>✨ ${t.found} ${allCombinations.length} ${t.combinations}</strong><br><span style="font-size:14px;">${t.mediumInfo}</span></div>`;
+        } else if (!isVeryLarge && !isLargeRange && !showAll && allCombinations.length > initialShowCount) {
+            html += `<div class="result-card info"><strong>✨ ${t.found} ${allCombinations.length} ${t.combinations}</strong><br><span style="font-size:14px;">${t.showing} ${initialShowCount} ${t.bestSolutions}</span></div>`;
+        } else if (showAll) {
+            html += `<div class="result-card info"><strong>📋 ${t.showingAll} ${allCombinations.length} ${t.combinations}</strong></div>`;
+        }
+
+        toShow.forEach((comboInts, index) => {
+            // Convert back to mm for display
+            const combo = comboInts.map(v => v / 1000);
+            const sumInt = comboInts.reduce((a, b) => a + b, 0);
+            const sumMm = (sumInt / 1000).toFixed(3);
+            const blockList = combo.map(b => b.toFixed(3)).join(' mm + ') + ' mm';
+            const copyText = combo.map(b => b.toFixed(3)).join(' + ') + ' = ' + sumMm + ' mm';
+
+            html += `
+                <div class="result-card">
+                    <div class="result-header">
+                        <span class="result-title">🔧 ${t.combination} ${index + 1}</span>
+                        <div class="result-actions">
+                            <span class="block-count">${combo.length} ${getBlockWord(combo.length)}</span>
+                            <button class="copy-btn" onclick="copyCombo(this, '${copyText.replace(/'/g, "\\'")}')">${t.copyBtn}</button>
+                        </div>
+                    </div>
+                    <div class="blocks-list">${blockList}</div>
+                    <div class="blocks-visual">
+                        ${combo.map(b => `<div class="block-visual ${getBlockClass(b)}" title="${b.toFixed(3)} mm">${b.toFixed(3)}</div>`).join('')}
+                    </div>
+                    <div class="sum-display">✓ ${t.total}: ${sumMm} mm</div>
+                </div>`;
+        });
+
+        // Toggle button
+        if (!isVeryLarge && !isLargeRange) {
+            if (!showAll && allCombinations.length > initialShowCount) {
+                html += `<button class="button secondary" onclick="displayResults(true)">📂 ${t.showAll} ${allCombinations.length} ${t.combinations}</button>`;
+            } else if (showAll && allCombinations.length > initialShowCount) {
                 html += `<button class="button secondary" onclick="displayResults(false)">⬆️ ${t.showFirst} ${initialShowCount}</button>`;
             }
-            resultsDiv.innerHTML = html;
         }
 
-        function showAllResults() {
-            showingAll = true;
-            displayResults(true);
-        }
+        resultsDiv.innerHTML = html;
+    }
 
-        document.getElementById('targetValue').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                calculate();
-            }
+    function showAllResults() { displayResults(true); }
+
+    // ─── COPY TO CLIPBOARD ─────────────────────────────────────────────────────
+    function copyCombo(btn, text) {
+        const t = translations[currentLang];
+        navigator.clipboard.writeText(text).then(() => {
+            btn.innerHTML = t.copiedBtn;
+            btn.classList.add('copied');
+            showToast(t.toastCopied);
+            setTimeout(() => {
+                btn.innerHTML = t.copyBtn;
+                btn.classList.remove('copied');
+            }, 2000);
+        }).catch(() => {
+            // Fallback for browsers without clipboard API
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            btn.innerHTML = t.copiedBtn;
+            btn.classList.add('copied');
+            showToast(t.toastCopied);
+            setTimeout(() => {
+                btn.innerHTML = t.copyBtn;
+                btn.classList.remove('copied');
+            }, 2000);
         });
-        
-        document.getElementById('targetValue').addEventListener('input', function(e) {
-            let value = e.target.value;
-            value = value.replace(',', '.');
-            value = value.replace(/[^\d.]/g, '');
-            const parts = value.split('.');
-            if (parts.length > 2) {
-                value = parts[0] + '.' + parts.slice(1).join('');
-            }
-            if (parts.length === 2) {
-                const integerPart = parseFloat(parts[0]) || 0;
-                const maxDecimals = integerPart > 400 ? 2 : 3;
-                if (parts[1].length > maxDecimals) {
-                    value = parts[0] + '.' + parts[1].substring(0, maxDecimals);
-                }
-            }
-            e.target.value = value;
-        });
+    }
+
+    // ─── HELPERS ───────────────────────────────────────────────────────────────
+    function getBlockClass(value) {
+        if (value >= 10)   return 'large';
+        if (value >= 1.5)  return 'medium';
+        if (value >= 1.01) return 'small';
+        return 'tiny';
+    }
+
+    function getBlockWord(count) {
+        const t = translations[currentLang];
+        if (count === 1) return t.block;
+        if (currentLang === 'hr' && count >= 2 && count <= 4) return t.blocks2_4;
+        return t.blocks5plus;
+    }
+
+    function generateColoredBlocksGrid() {
+        const blocks = [
+            0.5, 1.0, 1.001, 1.002, 1.003, 1.004, 1.005, 1.006, 1.007, 1.008, 1.009,
+            1.01, 1.02, 1.03, 1.04, 1.05, 1.06, 1.07, 1.08, 1.09,
+            1.10, 1.11, 1.12, 1.13, 1.14, 1.15, 1.16, 1.17, 1.18, 1.19,
+            1.20, 1.21, 1.22, 1.23, 1.24, 1.25, 1.26, 1.27, 1.28, 1.29,
+            1.30, 1.31, 1.32, 1.33, 1.34, 1.35, 1.36, 1.37, 1.38, 1.39,
+            1.40, 1.41, 1.42, 1.43, 1.44, 1.45, 1.46, 1.47, 1.48, 1.49,
+            1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5,
+            10, 20, 30, 40, 50, 60, 70, 80, 90, 100
+        ];
+        return blocks.map(b => `<div class="block-chip ${getBlockClass(b)}">${b}</div>`).join('');
+    }
     </script>
-
-
-</body></html>
+</body>
+</html>
