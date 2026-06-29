@@ -15,7 +15,7 @@
 #### 🐛 Ispravci grešaka
 
 **Floating-point preciznost**
-JavaScript koristi 64-bitne decimalne brojeve (IEEE 754), pa operacije poput `0.1 + 0.2` ne daju točno `0.3`, već `0.30000000000000004`. Ovo je moglo uzrokovati propuštanje valjanih kombinacija ili netočne zbroje.
+JavaScript koristi 64-bitne decimalne brojeve (IEEE 754), pa operacije poput `0.1 + 0.2` ne daju točno `0.3`, već `0.30000000000000004`. Ovo je moglo uzrokovati propuštanje valjanih kombinacija ili netočne zbrojeve.
 
 Rješenje: sve vrijednosti pločica i unesena dimenzija pretvaraju se u cijele brojeve množenjem s `1000` (npr. `1.005 mm` → `1005`). Sva aritmetika provodi se s cijelim brojevima, a rezultati se dijele s `1000` tek pri prikazu.
 
@@ -95,7 +95,7 @@ Dodani meta tagovi za bolje dijeljenje linka i prikaz na mobilnim uređajima:
 
 ---
 
-#### 📦 Bez breaking changes
+#### 📦 Neizmjenjeno ...
 
 - Skup pločica (87 komada) ostaje nepromijenjen
 - Algoritam pretrage (DFS) ostaje nepromijenjen
