@@ -1,6 +1,6 @@
 # 📋 Izmjene / Changelog / Änderungsprotokoll
 
-📖 **Čitaj na:** [🇭🇷 Hrvatski](#-hrvatskom) | [🇬🇧 English](#-english) | [🇩🇪 Deutsch](#-deutsch)
+📖 **Čitaj na:** [🇭🇷 Hrvatskom](#-hrvatski) | [🇬🇧 English](#-english) | [🇩🇪 Deutsch](#-deutsch)
 
 ---
 
