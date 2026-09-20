@@ -132,26 +132,37 @@
     //    i zatim se upiti (queryDP) rješavaju u O(1) + rekonstrukcija.
     function buildDP(blocks) {
         const bl = [...blocks];
-        if (!bl.length) return { blocks: bl, g: 0, bs: [], limit: 0, reach: new Uint8Array(1), parent: new Int16Array(1) };
+        if (!bl.length) return {
+            blocks: bl, g: 0, bs: [], limit: 0,
+            reach: new Uint8Array(1), parent: new Int16Array(1), minCount: new Uint8Array(1)
+        };
         const g = bl.reduce(gcd2, 0);
         const bs = bl.map(b => b / g);
         const limit = bs.reduce((a, b) => a + b, 0);
         const reach = new Uint8Array(limit + 1);
         const parent = new Int16Array(limit + 1).fill(-1);
+        // 255 = nedostižno. Uz najviše 103 pločice Uint8 je dovoljan.
+        // Ova tablica daje EGZAKTAN najmanji broj pločica za svaki dostižan zbroj.
+        const minCount = new Uint8Array(limit + 1).fill(255);
         reach[0] = 1;
+        minCount[0] = 0;
         const order = bs.map((b, i) => i).sort((x, y) => bs[y] - bs[x]);
         for (const i of order) {
             const b = bs[i];
             for (let j = limit; j >= b; j--) {
                 if (!reach[j] && reach[j - b]) { reach[j] = 1; parent[j] = i; }
+                if (minCount[j - b] !== 255) {
+                    const candidate = minCount[j - b] + 1;
+                    if (candidate < minCount[j]) minCount[j] = candidate;
+                }
             }
         }
-        return { blocks: bl, g, bs, limit, reach, parent };
+        return { blocks: bl, g, bs, limit, reach, parent, minCount };
     }
 
     function queryDP(dp, targetInt) {
         if (!dp.g) return { combo: null, lower: null, upper: null, reachable: false };
-        const { blocks, g, bs, limit, reach, parent } = dp;
+        const { blocks, g, bs, limit, reach, parent, minCount } = dp;
         const tg = targetInt / g;
         let combo = null;
         if (Number.isInteger(tg) && tg >= 0 && tg <= limit && reach[tg]) {
@@ -165,7 +176,8 @@
             for (let j = Math.min(Math.floor(tg), limit); j >= 1; j--) if (reach[j]) { lower = j * g; break; }
             for (let j = Math.max(Math.ceil(tg), 1); j <= limit; j++)  if (reach[j]) { upper = j * g; break; }
         }
-        return { combo, lower, upper, reachable: combo !== null };
+        const minBlocks = combo && minCount ? minCount[tg] : (combo ? combo.length : null);
+        return { combo, lower, upper, reachable: combo !== null, minBlocks };
     }
 
     // Kompatibilni omotač (gradi tablicu za svaki poziv — koristi buildDP/queryDP gdje je moguće)
@@ -173,30 +185,84 @@
         return queryDP(buildDP(blocks), targetInt);
     }
 
-    // ─── 3. DFS: SAMO za alternative — dostižnost ne ovisi o njemu. ─────────
-    function findAlternatives(targetInt, blocksDesc, maxResults, maxIterations, maxDepth) {
-        const results = new Map();
-        let iters = 0;
-        function dfs(remaining, combo, startIdx, depth) {
-            if (++iters > maxIterations || depth > maxDepth || results.size >= maxResults) return;
-            if (remaining === 0) {
-                const c = combo.slice().sort((a, b) => b - a);
-                const key = c.join(',');
-                if (!results.has(key)) results.set(key, c);
+    // ─── 3. Enumeracija praktičnih kombinacija ───────────────────────────
+    // Pretražuje se po TOČNOM broju pločica: prvo minLength, zatim minLength + 1...
+    // Time limit rezultata više ne može napuniti duboka DFS grana prije nego što se
+    // pregledaju kraće i praktičnije kombinacije.
+    function enumerateByLength(targetInt, blocksDesc, minLength, maxLength, maxResults, maxIterations) {
+        const blocks = [...blocksDesc].sort((a, b) => b - a);
+        const n = blocks.length;
+        const prefix = new Float64Array(n + 1);
+        for (let i = 0; i < n; i++) prefix[i + 1] = prefix[i] + blocks[i];
+
+        const results = [];
+        const combo = [];
+        let iterations = 0;
+        let iterationLimitReached = false;
+        // Jedan rezultat više od limita dovoljan je da pouzdano znamo da je popis skraćen.
+        const searchLimit = maxResults + 1;
+
+        const maxPossible = (start, count) => prefix[start + count] - prefix[start];
+        const minPossible = count => prefix[n] - prefix[n - count];
+
+        function dfs(remaining, start, slots) {
+            if (results.length >= searchLimit || iterationLimitReached) return;
+            if (++iterations > maxIterations) { iterationLimitReached = true; return; }
+            if (slots === 0) {
+                if (remaining === 0) results.push(combo.slice());
                 return;
             }
-            if (remaining < 0) return;
-            for (let i = startIdx; i < blocksDesc.length; i++) {
-                if (results.size >= maxResults || iters > maxIterations) return;
-                const block = blocksDesc[i];
+            if (n - start < slots) return;
+            if (remaining > maxPossible(start, slots) || remaining < minPossible(slots)) return;
+
+            if (slots === 1) {
+                for (let i = start; i < n; i++) {
+                    if (++iterations > maxIterations) { iterationLimitReached = true; return; }
+                    const block = blocks[i];
+                    if (block > remaining) continue;
+                    if (block < remaining) return;
+                    results.push(combo.concat(block));
+                    return;
+                }
+                return;
+            }
+
+            const lastStart = n - slots;
+            for (let i = start; i <= lastStart; i++) {
+                if (results.length >= searchLimit || iterationLimitReached) return;
+                const block = blocks[i];
                 if (block > remaining) continue;
+                const nextRemaining = remaining - block;
+                const nextSlots = slots - 1;
+                if (nextRemaining > maxPossible(i + 1, nextSlots)) continue;
+                if (nextRemaining < minPossible(nextSlots)) continue;
                 combo.push(block);
-                dfs(remaining - block, combo, i + 1, depth + 1);
+                dfs(nextRemaining, i + 1, nextSlots);
                 combo.pop();
             }
         }
-        dfs(targetInt, [], 0, 0);
-        return Array.from(results.values());
+
+        const firstLength = Math.max(0, minLength);
+        const lastLength = Math.min(maxLength, n);
+        for (let length = firstLength; length <= lastLength; length++) {
+            dfs(targetInt, 0, length);
+            if (results.length >= searchLimit || iterationLimitReached) break;
+        }
+
+        return {
+            combos: results.slice(0, maxResults),
+            complete: !iterationLimitReached && results.length <= maxResults,
+            truncated: iterationLimitReached || results.length > maxResults,
+            iterations
+        };
+    }
+
+    // Kompatibilni javni omotač: vraća do maxResults najkraćih kombinacija.
+    function findAlternatives(targetInt, blocksDesc, maxResults, maxIterations, maxDepth) {
+        return enumerateByLength(
+            targetInt, blocksDesc, 0, maxDepth,
+            maxResults, maxIterations
+        ).combos;
     }
 
     // ─── GLAVNI ULAZ ────────────────────────────────────────────────────────
@@ -209,8 +275,6 @@
         const extraLen = opts.extraLen !== undefined ? opts.extraLen : 1;
         const dp = opts.dp || buildDP(blocks);
 
-        const combos = new Map();
-        const add = c => { if (c) { const k = c.join(','); if (!combos.has(k)) combos.set(k, c); } };
         const blocksDesc = [...blocks].sort((a, b) => b - a);
 
         // Rani izlaz: nije višekratnik granularnosti seta -> dokazano nedostižno.
@@ -222,22 +286,49 @@
         // DP je jeftin (tablica već postoji) i egzaktan -> uvijek prvi.
         const q = queryDP(dp, targetInt);
         if (!q.combo) return { combos: [], lower: q.lower, upper: q.upper };
-        add(q.combo);
+        const minLen = q.minBlocks;
+        let maxResults, maxLen, maxIterations;
+        if (targetInt <= t1) {
+            maxResults = 100;
+            maxLen = minLen + extraLen;
+            maxIterations = 2000000;
+        } else if (targetInt <= t2) {
+            maxResults = 5;
+            maxLen = minLen + extraLen;
+            maxIterations = 2000000;
+        } else {
+            maxResults = 1;
+            maxLen = minLen;
+            maxIterations = 5000000;
+        }
 
-        add(solveFast(targetInt, blocksDesc));
-        if (targetInt <= t1)      findAlternatives(targetInt, blocksDesc, 100, 100000, 12).forEach(add);
-        else if (targetInt <= t2) findAlternatives(targetInt, blocksDesc, 5, 150000, 14).forEach(add);
+        const found = enumerateByLength(
+            targetInt, blocksDesc, minLen, maxLen,
+            maxResults, maxIterations
+        );
 
-        let out = Array.from(combos.values()).sort((a, b) => {
-            if (a.length !== b.length) return a.length - b.length;
-            for (let i = 0; i < a.length; i++) if (b[i] !== a[i]) return b[i] - a[i];
-            return 0;
-        });
-        // Alternative s puno više pločica od najkraće su šum (nitko ne slaže 5 kad postoje 2).
-        const minLen = out[0].length;
-        out = out.filter(c => c.length <= minLen + extraLen);
-        return { combos: out, lower: null, upper: null };
+        // DP jamči da rješenje postoji. Ovaj fallback čuva tu garanciju i u krajnje
+        // nepovoljnom slučaju kada sigurnosni limit enumeracije istekne prije prvog nalaza.
+        if (!found.combos.length) {
+            found.combos = [q.combo];
+            found.complete = false;
+            found.truncated = true;
+        }
+
+        return {
+            combos: found.combos,
+            lower: null,
+            upper: null,
+            minLength: minLen,
+            maxLength: maxLen,
+            complete: found.complete,
+            truncated: found.truncated,
+            resultLimit: maxResults
+        };
     }
 
-    return { UNITS, SETS, SET_ERRORS, gcd2, range, solveFast, buildDP, queryDP, solveDP, findAlternatives, solve };
+    return {
+        UNITS, SETS, SET_ERRORS, gcd2, range, solveFast, buildDP, queryDP, solveDP,
+        enumerateByLength, findAlternatives, solve
+    };
 });
