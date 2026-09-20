@@ -1,7 +1,5 @@
 // Service worker — omogućuje rad kalkulatora bez internetske veze.
-// Strategija je network-first: dok ima mreže, korisnik UVIJEK dobiva svježu verziju
-// bez obzira na CACHE_NAME. Promjena imena keša služi samo čišćenju starih unosa
-// (i tome da install ponovno povuče sve datoteke iz ASSETS) — bump ga pri svakom izdanju.
+
 const CACHE_NAME = 'etaloni-v3.2';
 const ASSETS = [
     './', './index.html', './solver.js', './manifest.json',
