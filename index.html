@@ -757,7 +757,7 @@
             <div class="info-section">
                 <h3 id="infoAuthorTitle">👨‍💻 O programu</h3>
                 <div class="author-info">
-                    <p><strong id="authorLabel">Autor:</strong> Josip Sinković <span class="version" id="versionLabel">v3.2 (2026)</span></p>
+                    <p><strong id="authorLabel">Autor:</strong> Josip Sinković <span class="version" id="versionLabel">v3.0 (2026)</span></p>
                     <p><strong>Email:</strong> <a href="mailto:motorola10@gmail.com">motorola10@gmail.com</a></p>
                     <p><strong>Web:</strong> <a href="https://kikiriki321.github.io/etaloni/" target="_blank" rel="noopener">kikiriki321.github.io/etaloni</a></p>
                     <p style="margin-top:12px; font-style:italic;" id="authorNote">Program napravljen za kolege koji ne znaju računati napamet! 😄</p>
@@ -794,15 +794,16 @@
             or: 'ili',
             optimalFound: 'Optimalna kombinacija pronađena',
             largeInfo: 'Za dimenzije > {t2} prikazuje se najpraktičnija kombinacija',
-            found: 'Pronađeno', combinations: 'kombinacija',
+            found: 'Pronađeno', foundAtLeast: 'Pronađeno najmanje', combinations: 'kombinacija',
+            practicalCombinationWords: ['praktična kombinacija', 'praktične kombinacije', 'praktičnih kombinacija'],
             mediumInfo: 'Za dimenzije {t1}–{t2} prikazuje se do 5 rješenja',
             showing: 'Prikazujem prvih', bestSolutions: 'najboljih rješenja',
-            showingAll: 'Prikazujem svih',
+            showingAll: 'Prikazujem svih', showingFound: 'Prikazujem pronađenih',
             combination: 'Kombinacija',
             recommended: 'Preporučeno',
             blockWords: ['pločica', 'pločice', 'pločica'],
             total: 'Ukupno',
-            showAll: 'Prikaži svih', showFirst: 'Prikaži samo prvih',
+            showAll: 'Prikaži svih', showFound: 'Prikaži pronađenih', showFirst: 'Prikaži samo prvih',
             copyBtn: '📋 Kopiraj', copiedBtn: '✓ Kopirano',
             historyLabel: 'Nedavne pretrage:',
             hintOverMax: 'Prelazi maksimum seta',
@@ -824,9 +825,9 @@
             modalTitle: 'Informacije o kalkulatoru',
             infoAlgoTitle: 'Algoritam',
             infoAlgo1: 'Izračun je <strong>egzaktan</strong>: ako kombinacija postoji, alat je garantirano pronalazi. Poruka "nije moguće" znači matematički dokazano nemoguće s dostupnim pločicama.',
-            infoRange1: '≤ {t1}:', infoRange1Desc: 'Traži do 100 alternativnih kombinacija; prikazuje prvih 10 (samo one s najviše 1 pločicom više od najkraće)',
-            infoRange2: '{t1} – {t2}:', infoRange2Desc: 'Prikazuje do 5 kombinacija',
-            infoRange3: '> {t2}:', infoRange3Desc: 'Prikazuje 1 preporučenu kombinaciju (najmanje pločica)',
+            infoRange1: '≤ {t1}:', infoRange1Desc: 'Egzaktno traži kombinacije s najmanjim brojem pločica i s jednom pločicom više; vraća do 100 i prikazuje prvih 10',
+            infoRange2: '{t1} – {t2}:', infoRange2Desc: 'Vraća do 5 najpraktičnijih kombinacija',
+            infoRange3: '> {t2}:', infoRange3Desc: 'Prikazuje 1 egzaktno optimalnu kombinaciju (najmanje pločica)',
             infoOtherTitle: 'Dodatne informacije',
             infoMaxPrefix: 'Maksimalna dimenzija odabranog seta:',
             infoDecimals: 'Unos do {dec} decimale. Granularnost odabranog seta: <strong>{step}</strong> — vrijednosti izvan tog koraka su fizički nedostižne.',
@@ -836,7 +837,7 @@
             infoBlocksTitle: 'Legenda boja + dostupne pločice',
             legendLarge: '≥ 10 mm', legendMedium: '1.5 – 9.99 mm', legendSmall: '1.01 – 1.49 mm', legendTiny: '≤ 1.009 mm',
             infoAuthorTitle: 'O programu',
-            authorLabel: 'Autor:', versionLabel: 'v3.2 (2026)',
+            authorLabel: 'Autor:', versionLabel: 'v3.0 (2026)',
             authorNote: 'Program napravljen za kolege koji ne znaju računati napamet! 😄',
             toastCopied: '✓ Kombinacija kopirana u međuspremnik',
             toastInvalidPaste: '⚠️ Zalijepljeni tekst nije ispravna dimenzija'
@@ -862,15 +863,16 @@
             or: 'or',
             optimalFound: 'Optimum combination found',
             largeInfo: 'For dimensions > {t2} the most practical combination is shown',
-            found: 'Found', combinations: 'combinations',
+            found: 'Found', foundAtLeast: 'Found at least', combinations: 'combinations',
+            practicalCombinationWords: ['practical combination', 'practical combinations', 'practical combinations'],
             mediumInfo: 'For dimensions {t1}–{t2} up to 5 solutions are shown',
             showing: 'Showing first', bestSolutions: 'best solutions',
-            showingAll: 'Showing all',
+            showingAll: 'Showing all', showingFound: 'Showing the',
             combination: 'Combination',
             recommended: 'Recommended',
             blockWords: ['block', 'blocks', 'blocks'],
             total: 'Total',
-            showAll: 'Show all', showFirst: 'Show only first',
+            showAll: 'Show all', showFound: 'Show the', showFirst: 'Show only first',
             copyBtn: '📋 Copy', copiedBtn: '✓ Copied',
             historyLabel: 'Recent searches:',
             hintOverMax: 'Exceeds set maximum',
@@ -892,9 +894,9 @@
             modalTitle: 'Calculator Information',
             infoAlgoTitle: 'Algorithm',
             infoAlgo1: 'The calculation is <strong>exact</strong>: if a combination exists, the tool is guaranteed to find it. "Cannot build" means mathematically proven impossible with the available blocks.',
-            infoRange1: '≤ {t1}:', infoRange1Desc: 'Searches up to 100 alternative combinations; displays first 10 (only those with at most 1 block more than the shortest)',
-            infoRange2: '{t1} – {t2}:', infoRange2Desc: 'Displays up to 5 combinations',
-            infoRange3: '> {t2}:', infoRange3Desc: 'Displays 1 recommended combination (fewest blocks)',
+            infoRange1: '≤ {t1}:', infoRange1Desc: 'Exactly searches combinations with the fewest blocks and one extra block; returns up to 100 and displays the first 10',
+            infoRange2: '{t1} – {t2}:', infoRange2Desc: 'Returns up to 5 of the most practical combinations',
+            infoRange3: '> {t2}:', infoRange3Desc: 'Displays 1 exactly optimal combination (fewest blocks)',
             infoOtherTitle: 'Additional information',
             infoMaxPrefix: 'Maximum dimension of the selected set:',
             infoDecimals: 'Input up to {dec} decimal places. Granularity of the selected set: <strong>{step}</strong> — values off that step are physically unreachable.',
@@ -904,7 +906,7 @@
             infoBlocksTitle: 'Color legend + available blocks',
             legendLarge: '≥ 10 mm', legendMedium: '1.5 – 9.99 mm', legendSmall: '1.01 – 1.49 mm', legendTiny: '≤ 1.009 mm',
             infoAuthorTitle: 'About the program',
-            authorLabel: 'Author:', versionLabel: 'v3.2 (2026)',
+            authorLabel: 'Author:', versionLabel: 'v3.0 (2026)',
             authorNote: "Program created for colleagues who can't calculate in their heads! 😄",
             toastCopied: '✓ Combination copied to clipboard',
             toastInvalidPaste: '⚠️ Pasted text is not a valid dimension'
@@ -930,15 +932,16 @@
             or: 'oder',
             optimalFound: 'Optimale Kombination gefunden',
             largeInfo: 'Für Maße > {t2} wird die praktischste Kombination angezeigt',
-            found: 'Gefunden', combinations: 'Kombinationen',
+            found: 'Gefunden', foundAtLeast: 'Mindestens gefunden', combinations: 'Kombinationen',
+            practicalCombinationWords: ['praktische Kombination', 'praktische Kombinationen', 'praktische Kombinationen'],
             mediumInfo: 'Für Maße {t1}–{t2} werden bis zu 5 Lösungen angezeigt',
             showing: 'Zeige erste', bestSolutions: 'beste Lösungen',
-            showingAll: 'Zeige alle',
+            showingAll: 'Zeige alle', showingFound: 'Zeige die gefundenen',
             combination: 'Kombination',
             recommended: 'Empfohlen',
             blockWords: ['Endmaß', 'Endmaße', 'Endmaße'],
             total: 'Gesamt',
-            showAll: 'Alle anzeigen', showFirst: 'Nur erste anzeigen',
+            showAll: 'Alle anzeigen', showFound: 'Gefundene anzeigen', showFirst: 'Nur erste anzeigen',
             copyBtn: '📋 Kopieren', copiedBtn: '✓ Kopiert',
             historyLabel: 'Letzte Suchen:',
             hintOverMax: 'Überschreitet Satzmaximum',
@@ -960,9 +963,9 @@
             modalTitle: 'Rechner-Informationen',
             infoAlgoTitle: 'Algorithmus',
             infoAlgo1: 'Die Berechnung ist <strong>exakt</strong>: Wenn eine Kombination existiert, wird sie garantiert gefunden. "Nicht möglich" bedeutet mathematisch bewiesen unmöglich mit den verfügbaren Endmaßen.',
-            infoRange1: '≤ {t1}:', infoRange1Desc: 'Sucht bis zu 100 alternative Kombinationen; zeigt erste 10 (nur solche mit höchstens 1 Endmaß mehr als die kürzeste)',
-            infoRange2: '{t1} – {t2}:', infoRange2Desc: 'Zeigt bis zu 5 Kombinationen',
-            infoRange3: '> {t2}:', infoRange3Desc: 'Zeigt 1 empfohlene Kombination (wenigste Endmaße)',
+            infoRange1: '≤ {t1}:', infoRange1Desc: 'Sucht exakt Kombinationen mit den wenigsten Endmaßen und einem zusätzlichen Endmaß; liefert bis zu 100 und zeigt die ersten 10',
+            infoRange2: '{t1} – {t2}:', infoRange2Desc: 'Liefert bis zu 5 der praktischsten Kombinationen',
+            infoRange3: '> {t2}:', infoRange3Desc: 'Zeigt 1 exakt optimale Kombination (wenigste Endmaße)',
             infoOtherTitle: 'Zusätzliche Informationen',
             infoMaxPrefix: 'Maximales Maß des gewählten Satzes:',
             infoDecimals: 'Eingabe bis zu {dec} Dezimalstellen. Granularität des gewählten Satzes: <strong>{step}</strong> — Werte außerhalb dieses Schritts sind physikalisch unerreichbar.',
@@ -972,7 +975,7 @@
             infoBlocksTitle: 'Farblegende + verfügbare Endmaße',
             legendLarge: '≥ 10 mm', legendMedium: '1.5 – 9.99 mm', legendSmall: '1.01 – 1.49 mm', legendTiny: '≤ 1.009 mm',
             infoAuthorTitle: 'Über das Programm',
-            authorLabel: 'Autor:', versionLabel: 'v3.2 (2026)',
+            authorLabel: 'Autor:', versionLabel: 'v3.0 (2026)',
             authorNote: 'Programm erstellt für Kollegen, die nicht im Kopf rechnen können! 😄',
             toastCopied: '✓ Kombination in Zwischenablage kopiert',
             toastInvalidPaste: '⚠️ Eingefügter Text ist keine gültige Maßangabe'
@@ -1003,6 +1006,9 @@
     let excludedMap = JSON.parse(localStorage.getItem('gauge_excluded_v3') || '{}');
     let allCombinations = [];
     let lastTargetInt = null;   // fiksira cilj u trenutku izračuna (ne čita se ponovno iz inputa)
+    let lastSolveMeta = null;
+    let resultsExpanded = false;
+    let calculationToken = 0;
 
     // Prikaz broja bez jedinice. Incni setovi reziju suvisne nule (katalozka notacija),
     // metricki zadrzavaju zatecene 3 decimale radi nulte regresije.
@@ -1127,6 +1133,7 @@
         renderHistory();
         renderExcludedBanner();
         updateInputHint();
+        if (lastTargetInt !== null && allCombinations.length) displayResults(resultsExpanded);
     }
 
     function updateModalLanguage() {
@@ -1186,10 +1193,7 @@
         const unitChanged = SETS[id].unit !== SETS[currentSetId].unit;
         currentSetId = id;
         localStorage.setItem('gauge_set', id);
-        allCombinations = [];
-        lastTargetInt = null;
-        document.getElementById('results').classList.add('hide');
-        document.getElementById('results').innerHTML = '';
+        clearResults();
         if (unitChanged) {
             // 47.385 mm i 47.385" nisu ista stvar — unos i povijest se ne prenose.
             clearInput(false);   // bez focus() — na mobitelu bi otvorio tipkovnicu
@@ -1219,6 +1223,7 @@
             showToast(`⚠️ ${uStr(blockInt)} ${t.toastExcluded}`);
         }
         saveExcluded(ex);
+        clearResults();
         renderBlocksGrid();
         renderExcludedBanner();
         updateModalLanguage();
@@ -1228,6 +1233,7 @@
 
     function resetExclusions() {
         saveExcluded(new Set());
+        clearResults();
         renderBlocksGrid();
         renderExcludedBanner();
         updateModalLanguage();
@@ -1346,6 +1352,17 @@
     });
 
     // ─── UNOS ───────────────────────────────────────────────────────────────
+    function clearResults() {
+        calculationToken++;
+        allCombinations = [];
+        lastTargetInt = null;
+        lastSolveMeta = null;
+        resultsExpanded = false;
+        const results = document.getElementById('results');
+        results.classList.add('hide');
+        results.innerHTML = '';
+    }
+
     function clearInput(focus = true) {
         const input = document.getElementById('targetValue');
         input.value = '';
@@ -1361,15 +1378,15 @@
         const input = document.getElementById('targetValue');
         const hint = document.getElementById('inputHint');
         const raw = input.value.replace(',', '.');
-        const val = parseFloat(raw);
+        const val = Number(raw);
         hint.className = 'input-hint';
         hint.textContent = '';
         if (!raw || isNaN(val)) return;
         const valInt = Math.round(val * U().scale);
         const maxA = availableMax();
-        const g = SETS[currentSetId].gcd;
-        if (valInt <= 0) return;
         const dp = peekDP();   // samo ako je tablica već izgrađena — nikad ne blokira tipkanje
+        const g = dp ? dp.g : availableBlocks().reduce(gcd2, 0);
+        if (valInt <= 0) return;
         const nearest = q => {
             const parts = [];
             if (q.lower !== null) parts.push(uStr(q.lower));
@@ -1391,16 +1408,22 @@
         }
     }
 
-    document.getElementById('targetValue').addEventListener('input', function(e) {
-        let value = e.target.value;
+    function sanitizeNumericInput(rawValue) {
+        let value = rawValue;
         value = value.replace(',', '.');
         value = value.replace(/[^\d.]/g, '');
         const parts = value.split('.');
         if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
         const maxDec = U().maxDec;
-        if (parts.length === 2 && parts[1].length > maxDec) {
-            value = parts[0] + '.' + parts[1].substring(0, maxDec);
+        const normalizedParts = value.split('.');
+        if (normalizedParts.length === 2 && normalizedParts[1].length > maxDec) {
+            value = normalizedParts[0] + '.' + normalizedParts[1].substring(0, maxDec);
         }
+        return value;
+    }
+
+    document.getElementById('targetValue').addEventListener('input', function(e) {
+        const value = sanitizeNumericInput(e.target.value);
         e.target.value = value;
         e.target.classList.remove('invalid');
         document.getElementById('clearBtn').classList.toggle('visible', value.length > 0);
@@ -1410,9 +1433,9 @@
     document.getElementById('targetValue').addEventListener('paste', function(e) {
         e.preventDefault();
         const pasted = (e.clipboardData || window.clipboardData).getData('text');
-        const cleaned = pasted.replace(',', '.').replace(/[^\d.]/g, '');
-        const val = parseFloat(cleaned);
-        if (isNaN(val) || val <= 0) {
+        const cleaned = sanitizeNumericInput(pasted);
+        const val = Number(cleaned);
+        if (!cleaned || !Number.isFinite(val) || val <= 0) {
             showToast(translations[currentLang].toastInvalidPaste);
             return;
         }
@@ -1439,11 +1462,17 @@
         const input = document.getElementById('targetValue');
         const resultsDiv = document.getElementById('results');
         const raw = input.value.replace(',', '.');
-        const target = parseFloat(raw);
+        const target = Number(raw);
+        const requestId = ++calculationToken;
+
+        allCombinations = [];
+        lastTargetInt = null;
+        lastSolveMeta = null;
+        resultsExpanded = false;
 
         input.classList.remove('invalid');
 
-        if (!raw || isNaN(target)) {
+        if (!raw || !Number.isFinite(target)) {
             input.classList.add('invalid');
             resultsDiv.innerHTML = `<div class="result-card error"><strong>⚠️ ${t.error}</strong><br>${t.errorMessage}</div>`;
             resultsDiv.classList.remove('hide');
@@ -1458,6 +1487,8 @@
 
         const targetInt = Math.round(target * U().scale);
         const avail = availableBlocks();
+        const configKey = dpKey();
+        const u = U();
         const maxA = avail.reduce((a, b) => a + b, 0);
         const exCount = getExcluded().size;
 
@@ -1479,10 +1510,12 @@
         resultsDiv.classList.remove('hide');
 
         setTimeout(() => {
-            const u = U();
+            if (requestId !== calculationToken || configKey !== dpKey()) return;
             const result = GaugeSolver.solve(targetInt, avail, { t1: u.t1, t2: u.t2, dp: getDP() });
             allCombinations = result.combos;
             lastTargetInt = targetInt;
+            lastSolveMeta = result;
+            resultsExpanded = false;
 
             if (allCombinations.length === 0) {
                 let nearestHtml = '';
@@ -1525,6 +1558,8 @@
         const isVeryLarge  = targetInt > u.t2;
         const isLargeRange = targetInt > u.t1 && targetInt <= u.t2;
         const toShow = showAll ? allCombinations : allCombinations.slice(0, initialShowCount);
+        const complete = !lastSolveMeta || lastSolveMeta.complete !== false;
+        resultsExpanded = showAll;
 
         let html = '';
 
@@ -1535,14 +1570,23 @@
                 <span style="font-family:monospace;font-size:14px;">${ex.map(fmt).join(', ')}${U().sfx}</span></div>`;
         }
 
-        if (isVeryLarge && !showAll) {
+        if (isVeryLarge) {
             html += `<div class="result-card info"><strong>✨ ${t.optimalFound}</strong><br><span style="font-size:14px;">${tr('largeInfo')}</span></div>`;
-        } else if (isLargeRange && !showAll) {
-            html += `<div class="result-card info"><strong>✨ ${t.found} ${allCombinations.length} ${t.combinations}</strong><br><span style="font-size:14px;">${tr('mediumInfo')}</span></div>`;
-        } else if (!isVeryLarge && !isLargeRange && !showAll && allCombinations.length > initialShowCount) {
-            html += `<div class="result-card info"><strong>✨ ${t.found} ${allCombinations.length} ${t.combinations}</strong><br><span style="font-size:14px;">${t.showing} ${initialShowCount} ${t.bestSolutions}</span></div>`;
-        } else if (showAll) {
-            html += `<div class="result-card info"><strong>📋 ${t.showingAll} ${allCombinations.length} ${t.combinations}</strong></div>`;
+        } else {
+            const count = allCombinations.length;
+            const foundLabel = complete ? t.found : t.foundAtLeast;
+            const comboWord = getPracticalCombinationWord(count);
+            let detail = '';
+            if (showAll) {
+                detail = complete
+                    ? `${t.showingAll} ${count} ${comboWord}`
+                    : `${t.showingFound} ${count} ${comboWord}`;
+            } else if (count > initialShowCount) {
+                detail = `${t.showing} ${initialShowCount} ${t.bestSolutions}`;
+            } else if (isLargeRange) {
+                detail = tr('mediumInfo');
+            }
+            html += `<div class="result-card info"><strong>✨ ${foundLabel} ${count} ${comboWord}</strong>${detail ? `<br><span style="font-size:14px;">${detail}</span>` : ''}</div>`;
         }
 
         toShow.forEach((comboInts, index) => {
@@ -1571,7 +1615,8 @@
 
         if (!isVeryLarge && !isLargeRange) {
             if (!showAll && allCombinations.length > initialShowCount) {
-                html += `<button class="button secondary" id="toggleAllBtn" data-showall="1">📂 ${t.showAll} ${allCombinations.length} ${t.combinations}</button>`;
+                const showLabel = complete ? t.showAll : t.showFound;
+                html += `<button class="button secondary" id="toggleAllBtn" data-showall="1">📂 ${showLabel} ${allCombinations.length} ${getPracticalCombinationWord(allCombinations.length)}</button>`;
             } else if (showAll && allCombinations.length > initialShowCount) {
                 html += `<button class="button secondary" id="toggleAllBtn" data-showall="0">⬆️ ${t.showFirst} ${initialShowCount}</button>`;
             }
@@ -1621,6 +1666,15 @@
     // ─── POMOĆNE ────────────────────────────────────────────────────────────
     function getBlockWord(count) {
         const w = translations[currentLang].blockWords;
+        if (currentLang !== 'hr') return count === 1 ? w[0] : w[1];
+        const m10 = count % 10, m100 = count % 100;
+        if (m10 === 1 && m100 !== 11) return w[0];
+        if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return w[1];
+        return w[2];
+    }
+
+    function getPracticalCombinationWord(count) {
+        const w = translations[currentLang].practicalCombinationWords;
         if (currentLang !== 'hr') return count === 1 ? w[0] : w[1];
         const m10 = count % 10, m100 = count % 100;
         if (m10 === 1 && m100 !== 11) return w[0];
