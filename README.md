@@ -13,7 +13,7 @@ Egzaktan izračun kombinacija paralelnih mjernih pločica (etalona). Ako kombina
 ### Značajke
 
 - **8 setova pločica** — metrički 32 / 47 / 87 / 103 kom i inčni Mitutoyo 516: 81 / 35 / 28 / 10 kom. Jedinica (mm ili inch) izvodi se iz seta; miješanje je strukturno nemoguće.
-- **Egzaktan algoritam** — brzi heuristički rješavač za tipične slučajeve, DFS za alternative i DP subset-sum kao garancija: "nije moguće" znači *dokazano* nemoguće s dostupnim pločicama.
+- **Egzaktan algoritam** — DP subset-sum dokazuje dostižnost i najmanji broj pločica, a alternative se enumeriraju po točnom broju pločica: "nije moguće" znači *dokazano* nemoguće s dostupnim pločicama.
 - **Isključivanje pločica** — klikom na pločicu u info prozoru označiš je kao izgubljenu, oštećenu ili na umjeravanju. Izračun je ne koristi, maksimum seta se prilagođava, stanje se pamti po setu.
 - **Uživo upozorenja ispod polja** — dok tipkaš: prelazi maksimum, nije višekratnik koraka seta, nedostižno (s najbližim dostižnim vrijednostima gore/dolje).
 - **Preporučena kombinacija** = najmanje pločica (manje slaganja, manja pogreška). Alternative se prikazuju samo ako imaju najviše jednu pločicu više od najkraće.
@@ -25,7 +25,7 @@ Egzaktan izračun kombinacija paralelnih mjernih pločica (etalona). Ako kombina
 
 ### Kako radi (ukratko)
 
-Sve vrijednosti pretvaraju se u cijele brojeve (0.001 mm odnosno 0.00001") pa nema floating-point pogrešaka. Za svaki set računa se najveći zajednički djelitelj (gcd) svih pločica — to je fizička granularnost seta (npr. 0.005 mm za 103-set, 0.001 mm za 87-set) i sve što nije njegov višekratnik odbija se odmah. DP tablica dostižnosti gradi se jednom po kombinaciji *set + isključene pločice* (u pozadini, u idle vremenu preglednika) i zatim je svaki upit trenutan.
+Sve vrijednosti pretvaraju se u cijele brojeve (0.001 mm odnosno 0.00001") pa nema floating-point pogrešaka. Za svaki set računa se najveći zajednički djelitelj (gcd) svih pločica — to je fizička granularnost seta (npr. 0.005 mm za 103-set, 0.001 mm za 87-set) i sve što nije njegov višekratnik odbija se odmah. DP tablica dostižnosti i minimalnog broja pločica gradi se jednom po kombinaciji *set + isključene pločice* (u pozadini, u idle vremenu preglednika). Nakon toga se alternative traže samo za egzaktno minimalan broj pločica i jednu pločicu više, pa limit rezultata ne može sakriti kraće kombinacije.
 
 ### Struktura repozitorija
 
@@ -34,37 +34,32 @@ Sve vrijednosti pretvaraju se u cijele brojeve (0.001 mm odnosno 0.00001") pa ne
 | `index.html` | Sučelje, prijevodi, prikaz — sav CSS i UI JS u jednoj datoteci |
 | `solver.js` | Definicije setova i jedinica + cijeli algoritam. Bez DOM-a; radi u pregledniku (`window.GaugeSolver`) i u Nodeu |
 | `test.js` | Testovi algoritma (`node test.js`) |
+| `ui-test.js` | Smoke test stvarnog HTML prikaza za regresiju 100 mm / 87 kom (`node ui-test.js`) |
 | `sw.js` | Service worker — offline rad, network-first strategija |
 | `manifest.json` | Web manifest za instalaciju kao aplikacija |
 | `icon.svg`, `icon-192.png`, `icon-512.png` | Ikone aplikacije |
 
-> ⚠️ Svih 8 datoteka mora biti u istom direktoriju na poslužitelju. Service worker pri instalaciji povlači sve iz svoje `ASSETS` liste; ako jedna nedostaje (404), instalacija pada i offline rad ne radi.
+
 
 ### Testovi
 
 ```bash
 node test.js
+node ui-test.js
 ```
 
-Za svaki set prolazi **sve** dostižne vrijednosti do maksimuma seta (npr. 715 296 ciljeva za 87-set) i provjerava: zbroj kombinacije, da se nijedna pločica ne ponavlja, da su "najbliže" vrijednosti stvarno najbliže i dostižne, da heuristički rješavač i DFS nikad ne vraćaju nevaljanu kombinaciju, filtar alternativa i isključivanje pločica. ~150 000 provjera, oko 10 s.
+`test.js` za svaki set prolazi **sve** dostižne vrijednosti do maksimuma seta (npr. 715 296 ciljeva za 87-set) i provjerava zbroj, jedinstvenost pločica, egzaktni minimum, najbliže dostižne vrijednosti, ograničenje alternativa i isključivanje pločica. `ui-test.js` zatim izvršava stvarni skript iz `index.html` u minimalnom DOM-u i zahtijeva poruku o pet kombinacija te prikaz svih pet rješenja za 100 mm / 87 kom.
 
 ### Objava nove verzije
 
 1. Promijeni kod.
-2. Povećaj `CACHE_NAME` u `sw.js` (npr. `etaloni-v3.2` → `etaloni-v3.3`) i `versionLabel` u prijevodima u `index.html`.
-3. Pokreni `node test.js` — mora ispisati `0 grešaka`.
+2. Povećaj `CACHE_NAME` u `sw.js` (npr. `etaloni-v3.3` → `etaloni-v3.4`) i `versionLabel` u prijevodima u `index.html`.
+3. Pokreni `node test.js` i `node ui-test.js` — oba moraju proći.
 4. Push na GitHub. GitHub Pages objavljuje za 1–3 minute; postojeći korisnici dobivaju novu verziju pri sljedećem učitavanju (network-first), stari keš se automatski briše.
 
 ### Lokalno pokretanje
 
-Otvaranje `index.html` izravno s diska radi (bez service workera). Za test offline rada i instalacije potreban je HTTPS ili `localhost`:
-
-```bash
-python3 -m http.server 8000
-# zatim http://localhost:8000
-```
-
----
+Otvaranje `index.html` izravno s diska radi (bez service workera). 
 
 ## 🇬🇧 English
 
@@ -72,11 +67,11 @@ Exact gauge block combination calculator. Supports metric sets (32 / 47 / 87 / 1
 
 **Features:** exclude lost/damaged blocks per set · live hints while typing (over maximum, off the set's step, unreachable + nearest values) · recommended = fewest blocks, alternatives limited to at most one extra block · search history per unit · copy to clipboard · HR / EN / DE · dark/light theme following the system setting · works offline and installs as a PWA · keyboard shortcuts (Enter / Escape), focus management and screen-reader announcements.
 
-**How it works:** all values are integers (0.001 mm / 0.00001") — no floating-point error. The gcd of every set's blocks is its physical granularity; non-multiples are rejected instantly. A subset-sum DP table is built once per *set + exclusions* in idle time, after which every query is instant.
+**How it works:** all values are integers (0.001 mm / 0.00001") — no floating-point error. The gcd of every set's blocks is its physical granularity; non-multiples are rejected instantly. A subset-sum DP table proves reachability and the exact minimum block count. Alternatives are then enumerated by exact length, so a result limit cannot hide shorter combinations.
 
-**Repository:** `index.html` (UI) · `solver.js` (sets + algorithm, DOM-free, works in Node) · `test.js` (`node test.js`, exhaustive verification of every reachable value in every set) · `sw.js` (service worker, network-first) · `manifest.json` + icons. All 8 files must be deployed together — the service worker precaches all of them and fails to install if one is missing.
+**Repository:** `index.html` (UI) · `solver.js` (sets + algorithm, DOM-free, works in Node) · `test.js` (exhaustive algorithm tests) · `ui-test.js` (HTML result smoke test) · `sw.js` (service worker, network-first) · `manifest.json` + icons. Every runtime file listed in the service worker's `ASSETS` array must be deployed together.
 
-**Releasing:** bump `CACHE_NAME` in `sw.js` and `versionLabel` in `index.html`, run `node test.js`, push.
+**Releasing:** bump `CACHE_NAME` in `sw.js` and `versionLabel` in `index.html`, run `node test.js` and `node ui-test.js`, then push.
 
 ---
 
@@ -86,15 +81,29 @@ Exakter Endmaß-Kombinationsrechner. Unterstützt metrische Sätze (32 / 47 / 87
 
 **Funktionen:** Ausschluss verlorener/beschädigter Endmaße pro Satz · Live-Hinweise beim Tippen (über Maximum, nicht auf der Satzstufe, unerreichbar + nächste Werte) · Empfehlung = wenigste Endmaße, Alternativen mit höchstens einem Endmaß mehr · Suchverlauf pro Einheit · Kopieren in die Zwischenablage · HR / EN / DE · dunkles/helles Design nach Systemeinstellung · offline und als PWA installierbar · Tastenkürzel (Enter / Escape), Fokusführung und Screenreader-Ansagen.
 
-**Funktionsweise:** alle Werte sind Ganzzahlen (0,001 mm / 0,00001") — keine Gleitkommafehler. Der ggT aller Endmaße eines Satzes ist seine physikalische Granularität; Nicht-Vielfache werden sofort abgelehnt. Eine Subset-Sum-DP-Tabelle wird einmal pro *Satz + Ausschlüsse* im Leerlauf aufgebaut, danach ist jede Abfrage sofort.
+**Funktionsweise:** alle Werte sind Ganzzahlen (0,001 mm / 0,00001") — keine Gleitkommafehler. Der ggT aller Endmaße eines Satzes ist seine physikalische Granularität; Nicht-Vielfache werden sofort abgelehnt. Eine Subset-Sum-DP-Tabelle beweist die Erreichbarkeit und die exakte Mindestanzahl der Endmaße. Alternativen werden danach nach exakter Länge aufgezählt, sodass ein Ergebnislimit keine kürzeren Kombinationen verbergen kann.
 
-**Repository:** `index.html` (Oberfläche) · `solver.js` (Sätze + Algorithmus, ohne DOM, läuft in Node) · `test.js` (`node test.js`, vollständige Prüfung jedes erreichbaren Werts in jedem Satz) · `sw.js` (Service Worker, network-first) · `manifest.json` + Icons. Alle 8 Dateien müssen gemeinsam veröffentlicht werden — der Service Worker cached sie alle vor und schlägt fehl, wenn eine fehlt.
+**Repository:** `index.html` (Oberfläche) · `solver.js` (Sätze + Algorithmus, ohne DOM, läuft in Node) · `test.js` (vollständige Algorithmustests) · `ui-test.js` (Smoke-Test der HTML-Ergebnisse) · `sw.js` (Service Worker, network-first) · `manifest.json` + Icons. Alle in `ASSETS` aufgeführten Laufzeitdateien müssen gemeinsam veröffentlicht werden.
 
-**Neue Version:** `CACHE_NAME` in `sw.js` und `versionLabel` in `index.html` erhöhen, `node test.js` ausführen, pushen.
+**Neue Version:** `CACHE_NAME` in `sw.js` und `versionLabel` in `index.html` erhöhen, `node test.js` und `node ui-test.js` ausführen, dann pushen.
 
 ---
 
 ## 📋 Changelog
+
+### [3.0] – 2026
+
+**Ispravci**
+- Alternative se sada pretražuju po egzaktnom broju pločica. Limit od 100 više se ne može popuniti dugim kombinacijama prije nego algoritam dođe do kraćih.
+- Za 100 mm i set od 87 pločica vraća se svih pet praktičnih rješenja: `100`, `90+10`, `80+20`, `70+30`, `60+40`.
+- DP tablica sada izračunava i stvarni minimalni broj pločica, pa je oznaka "Preporučeno" egzaktna i za velike dimenzije.
+- Kartica s brojem pronađenih praktičnih kombinacija prikazuje se uvijek, uključujući slučajeve s manje od 10 rezultata.
+- Sučelje razlikuje potpuni popis od ograničenog (`Pronađeno najmanje ...`) i više ne tvrdi da prikazuje "sve" kada je dosegnut limit.
+- Lijepljeni unos sada prolazi istu normalizaciju i ograničenje decimala kao tipkani unos; više točaka ne može se tiho protumačiti kao druga vrijednost.
+- Promjena seta ili isključivanje pločice poništava zastarjele rezultate i zaustavlja prethodno zakazani izračun; promjena jezika odmah prevodi već prikazane rezultate.
+
+**Testovi**
+- Dodani regresijski testovi za 100 mm / 87 kom, status potpunog odnosno skraćenog popisa i stvarno generirani HTML rezultata.
 
 ### [3.2.0] – 2026
 
