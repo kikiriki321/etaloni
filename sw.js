@@ -1,6 +1,6 @@
 // Service worker — omogućuje rad kalkulatora bez internetske veze.
 
-const CACHE_NAME = 'etaloni-v3.2';
+const CACHE_NAME = 'etaloni-v3.3';
 const ASSETS = [
     './', './index.html', './solver.js', './manifest.json',
     './icon-192.png', './icon-512.png', './icon.svg'
